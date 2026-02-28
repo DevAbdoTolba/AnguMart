@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AnguMart Admin — Manage orders, shipping, and tracking." />
+  <title>AnguMart Admin — Orders</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">AnguMart</div>
+      <nav class="admin-sidebar-links">
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="users.html">👥 Users</a>
+        <a href="products.html">📦 Products</a>
+        <a href="categories.html">🏷️ Categories</a>
+        <a href="orders.html" class="active">🧾 Orders</a>
+        <a href="reviews.html">⭐ Reviews</a>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 class="admin-title">Manage Orders</h1>
+        <div class="flex gap-sm items-center"><span class="filter-chip active">All</span><span class="filter-chip">Pending</span><span class="filter-chip">Shipped</span><span class="filter-chip">Delivered</span></div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Tracking #</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">#ANG-2026-4821</td><td>Ahmed Hassan</td><td>3</td><td class="font-semibold">$921.68</td><td class="text-secondary">PayPal</td>
+              <td><select class="form-select" style="padding:6px 10px;font-size:.8rem;max-width:130px;"><option selected>Pending</option><option>Shipped</option><option>Delivered</option></select></td>
+              <td><input type="text" class="form-input" placeholder="Enter tracking #" style="padding:6px 10px;font-size:.8rem;max-width:180px;" /></td>
+              <td><div class="flex gap-xs"><button class="btn btn-primary btn-sm">Update</button><button class="btn btn-danger btn-sm">Cancel</button></div></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">#ANG-2026-4820</td><td>Sara Mohamed</td><td>1</td><td class="font-semibold">$79.50</td><td class="text-secondary">COD</td>
+              <td><select class="form-select" style="padding:6px 10px;font-size:.8rem;max-width:130px;"><option>Pending</option><option>Shipped</option><option selected>Delivered</option></select></td>
+              <td><span class="text-sm text-accent">EGY-TRK-2026-8192</span></td>
+              <td><div class="flex gap-xs"><button class="btn btn-primary btn-sm">Update</button><button class="btn btn-ghost btn-sm" style="opacity:0.3;cursor:not-allowed;">Cancel</button></div></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">#ANG-2026-4819</td><td>Omar Ali</td><td>2</td><td class="font-semibold">$349.99</td><td class="text-secondary">Wallet</td>
+              <td><select class="form-select" style="padding:6px 10px;font-size:.8rem;max-width:130px;"><option>Pending</option><option selected>Shipped</option><option>Delivered</option></select></td>
+              <td><span class="text-sm text-accent">EGY-TRK-2026-7321</span></td>
+              <td><div class="flex gap-xs"><button class="btn btn-primary btn-sm">Update</button><button class="btn btn-danger btn-sm">Cancel</button></div></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">#ANG-2026-4818</td><td>Nour Khaled</td><td>1</td><td class="font-semibold">$189.00</td><td class="text-secondary">PayPal</td>
+              <td><select class="form-select" style="padding:6px 10px;font-size:.8rem;max-width:130px;"><option selected>Pending</option><option>Shipped</option><option>Delivered</option></select></td>
+              <td><input type="text" class="form-input" placeholder="Enter tracking #" style="padding:6px 10px;font-size:.8rem;max-width:180px;" /></td>
+              <td><div class="flex gap-xs"><button class="btn btn-primary btn-sm">Update</button><button class="btn btn-danger btn-sm">Cancel</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination" style="margin-top: var(--space-lg);"><span class="pagination-btn">‹</span><span class="pagination-btn active">1</span><span class="pagination-btn">2</span><span class="pagination-btn">3</span><span class="pagination-btn">›</span></div>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AnguMart — Product details, reviews, and ratings." />
+  <title>AnguMart — Product Detail</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="home.html" class="navbar-brand">AnguMart</a>
+      <div class="search-bar">
+        <span class="search-bar-icon">🔍</span>
+        <input type="text" placeholder="Search products..." />
+      </div>
+      <div class="navbar-links">
+        <a href="../customer/wishlist.html">♡ Wishlist</a>
+        <a href="cart.html" class="navbar-icon">🛒<span class="badge">3</span></a>
+        <a href="login.html" class="btn btn-primary btn-sm">Log in</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN ===== -->
+  <main class="container" style="padding-top: var(--space-xl); padding-bottom: var(--space-3xl);">
+
+    <!-- Breadcrumb -->
+    <p class="text-sm text-secondary" style="margin-bottom: var(--space-lg);">
+      <a href="home.html">Home</a> / <a href="home.html">Electronics</a> / <span class="text-primary">Wireless Noise-Cancel Headphones</span>
+    </p>
+
+    <!-- Product Detail Layout -->
+    <div class="product-detail-layout">
+      <div class="product-detail-img" style="background: linear-gradient(135deg, #1a1a2e, #16213e); min-height: 480px;"></div>
+      <div>
+        <h1 class="product-detail-title">Wireless Noise-Cancel Headphones</h1>
+        <div class="product-detail-meta">
+          <span class="product-card-rating" style="font-size: 1rem;">★★★★★</span>
+          <span class="text-secondary">128 reviews</span>
+        </div>
+        <p class="product-detail-price">$249.99</p>
+        <div style="margin-bottom: var(--space-lg);">
+          <span class="stock-badge in-stock">● In Stock — 24 left</span>
+        </div>
+        <p class="product-detail-desc">
+          Experience studio-quality sound with our flagship wireless headphones. Featuring industry-leading active noise cancellation, 30-hour battery life, and ultra-comfortable over-ear cushions designed for all-day listening. Premium drivers deliver rich bass and crystal-clear highs. Bluetooth 5.3 for seamless connectivity with all your devices.
+        </p>
+        <div class="flex gap-md" style="margin-bottom: var(--space-xl);">
+          <button class="btn btn-primary btn-lg" style="flex:1;">Add to Cart</button>
+          <button class="btn btn-secondary btn-lg">♡</button>
+        </div>
+        <div class="card card-bordered" style="padding: var(--space-md);">
+          <div class="flex items-center gap-md">
+            <span style="font-size: 1.25rem;">🚚</span>
+            <div>
+              <p class="font-semibold text-sm">Free Shipping</p>
+              <p class="text-xs text-muted">Estimated delivery: 3–5 business days</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <section style="margin-top: var(--space-3xl);">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-lg);">
+        <h2 class="section-heading" style="margin-bottom:0;">Customer Reviews</h2>
+        <a href="../customer/write-review.html" class="btn btn-secondary btn-sm">Write a Review</a>
+      </div>
+
+      <div class="review">
+        <div class="review-header">
+          <div class="review-avatar">A</div>
+          <div>
+            <p class="review-author">Ahmed K.</p>
+            <p class="review-date">Feb 15, 2026</p>
+          </div>
+        </div>
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">Absolutely incredible sound quality! The noise cancellation is on another level. I use these daily for commuting and they block out everything. Battery lasts forever. Best headphones I've ever owned.</p>
+      </div>
+
+      <div class="review">
+        <div class="review-header">
+          <div class="review-avatar">S</div>
+          <div>
+            <p class="review-author">Sarah M.</p>
+            <p class="review-date">Feb 10, 2026</p>
+          </div>
+        </div>
+        <p class="review-stars">★★★★☆</p>
+        <p class="review-text">Great headphones, very comfortable. Sound is excellent for the price. Only downside is they're a bit heavy for long runs, but perfect for the gym and commutes.</p>
+      </div>
+
+      <div class="review">
+        <div class="review-header">
+          <div class="review-avatar">M</div>
+          <div>
+            <p class="review-author">Mohamed R.</p>
+            <p class="review-date">Jan 28, 2026</p>
+          </div>
+        </div>
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">Worth every penny. The build quality is premium and the ANC is fantastic. Pairs instantly with my phone. Would highly recommend to anyone looking for top-tier wireless headphones.</p>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>

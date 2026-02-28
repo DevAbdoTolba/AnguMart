@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AnguMart — Manage your profile and account settings." />
+  <title>AnguMart — My Profile</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR (Logged In) ===== -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="home.html" class="navbar-brand">AnguMart</a>
+      <div class="search-bar">
+        <span class="search-bar-icon">🔍</span>
+        <input type="text" placeholder="Search products..." />
+      </div>
+      <div class="navbar-links">
+        <a href="wishlist.html">♡ Wishlist</a>
+        <a href="customer-cart.html" class="navbar-icon">🛒<span class="badge">3</span></a>
+        <a href="profile.html" class="active" style="display:flex;align-items:center;gap:8px;">
+          <span style="width:32px;height:32px;border-radius:50%;background:var(--accent-muted);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;">A</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN ===== -->
+  <main class="container" style="padding-top: var(--space-xl); padding-bottom: var(--space-3xl); max-width: 720px;">
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-avatar">A</div>
+      <div>
+        <h1 class="profile-name">Ahmed Hassan</h1>
+        <p class="profile-email">ahmed.hassan@example.com</p>
+        <p class="text-xs text-muted" style="margin-top: 2px;">Member since Jan 2026</p>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); margin-bottom: var(--space-xl);">
+      <a href="order-history.html" class="card card-bordered text-center" style="text-decoration: none; padding: var(--space-lg);">
+        <p style="font-size: 1.5rem; margin-bottom: var(--space-sm);">📦</p>
+        <p class="font-semibold text-sm" style="color: var(--text-primary);">My Orders</p>
+        <p class="text-xs text-muted">View order history</p>
+      </a>
+      <a href="wishlist.html" class="card card-bordered text-center" style="text-decoration: none; padding: var(--space-lg);">
+        <p style="font-size: 1.5rem; margin-bottom: var(--space-sm);">♡</p>
+        <p class="font-semibold text-sm" style="color: var(--text-primary);">Wishlist</p>
+        <p class="text-xs text-muted">Saved items</p>
+      </a>
+      <a href="customer-cart.html" class="card card-bordered text-center" style="text-decoration: none; padding: var(--space-lg);">
+        <p style="font-size: 1.5rem; margin-bottom: var(--space-sm);">🛒</p>
+        <p class="font-semibold text-sm" style="color: var(--text-primary);">Cart</p>
+        <p class="text-xs text-muted">3 items</p>
+      </a>
+    </div>
+
+    <!-- Edit Profile -->
+    <div class="card card-bordered" style="margin-bottom: var(--space-lg);">
+      <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: var(--space-lg);">Edit Profile</h2>
+
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" value="Ahmed Hassan" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" value="ahmed.hassan@example.com" disabled style="opacity: 0.5;" />
+        <p class="form-hint">Email cannot be changed</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" class="form-input" value="+20 123 456 7890" />
+      </div>
+
+      <button class="btn btn-primary">Save Changes</button>
+    </div>
+
+    <!-- Wallet -->
+    <div class="card card-bordered" style="margin-bottom: var(--space-lg);">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: var(--space-xs);">Wallet Balance</h2>
+          <p class="text-sm text-secondary">Use your wallet for instant checkout</p>
+        </div>
+        <p style="font-size: 1.75rem; font-weight: 800; color: var(--accent);">$1,250.00</p>
+      </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="card" style="border: 1px solid var(--danger); background: rgba(231,76,60,.05);">
+      <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: var(--space-sm); color: var(--danger);">Danger Zone</h2>
+      <p class="text-sm text-secondary" style="margin-bottom: var(--space-md);">Permanently delete your account and all associated data. This action cannot be undone.</p>
+      <button class="btn btn-danger btn-sm">Delete My Account</button>
+    </div>
+
+  </main>
+
+</body>
+</html>

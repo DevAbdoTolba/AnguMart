@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AnguMart Admin — Manage users, block or view profiles." />
+  <title>AnguMart Admin — Users</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">AnguMart</div>
+      <nav class="admin-sidebar-links">
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="users.html" class="active">👥 Users</a>
+        <a href="products.html">📦 Products</a>
+        <a href="categories.html">🏷️ Categories</a>
+        <a href="orders.html">🧾 Orders</a>
+        <a href="reviews.html">⭐ Reviews</a>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header"><h1 class="admin-title">Manage Users</h1><p class="text-sm text-secondary">3,582 registered users</p></div>
+
+      <div class="search-bar" style="max-width: 400px; margin-bottom: var(--space-lg);"><span class="search-bar-icon">🔍</span><input type="text" placeholder="Search users by name or email..." /></div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>User</th><th>Email</th><th>Phone</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="flex items-center gap-sm"><span style="width:32px;height:32px;border-radius:50%;background:var(--accent-muted);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;">AH</span><span class="font-semibold">Ahmed Hassan</span></div></td>
+              <td class="text-secondary">ahmed.h@example.com</td><td class="text-secondary">+20 123 456 789</td>
+              <td><span class="status status-success">Customer</span></td><td><span class="status status-success">Approved</span></td>
+              <td><div class="flex gap-xs"><button class="btn btn-secondary btn-sm">View</button><button class="btn btn-danger btn-sm">Block</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="flex items-center gap-sm"><span style="width:32px;height:32px;border-radius:50%;background:var(--accent-muted);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;">SM</span><span class="font-semibold">Sara Mohamed</span></div></td>
+              <td class="text-secondary">sara.m@example.com</td><td class="text-secondary">+20 987 654 321</td>
+              <td><span class="status status-success">Customer</span></td><td><span class="status status-success">Approved</span></td>
+              <td><div class="flex gap-xs"><button class="btn btn-secondary btn-sm">View</button><button class="btn btn-danger btn-sm">Block</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="flex items-center gap-sm"><span style="width:32px;height:32px;border-radius:50%;background:rgba(231,76,60,.15);color:var(--danger);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;">OA</span><span class="font-semibold">Omar Ali</span></div></td>
+              <td class="text-secondary">omar.ali@example.com</td><td class="text-secondary">+20 111 222 333</td>
+              <td><span class="status status-success">Customer</span></td><td><span class="status status-danger">Restricted</span></td>
+              <td><div class="flex gap-xs"><button class="btn btn-secondary btn-sm">View</button><button class="btn btn-primary btn-sm">Unblock</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="flex items-center gap-sm"><span style="width:32px;height:32px;border-radius:50%;background:rgba(241,196,15,.15);color:var(--warning);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;">NK</span><span class="font-semibold">Nour Khaled</span></div></td>
+              <td class="text-secondary">nour.k@example.com</td><td class="text-secondary">+20 444 555 666</td>
+              <td><span class="status status-success">Customer</span></td><td><span class="status status-warning">Unverified</span></td>
+              <td><div class="flex gap-xs"><button class="btn btn-secondary btn-sm">View</button><button class="btn btn-danger btn-sm">Block</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="flex items-center gap-sm"><span style="width:32px;height:32px;border-radius:50%;background:rgba(52,152,219,.15);color:var(--info);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;">MR</span><span class="font-semibold">Mohamed Ramadan</span></div></td>
+              <td class="text-secondary">m.ramadan@example.com</td><td class="text-secondary">+20 777 888 999</td>
+              <td><span class="status status-info">Admin</span></td><td><span class="status status-success">Approved</span></td>
+              <td><div class="flex gap-xs"><button class="btn btn-secondary btn-sm">View</button><button class="btn btn-ghost btn-sm" style="opacity:0.3;cursor:not-allowed;">Block</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination" style="margin-top: var(--space-lg);"><span class="pagination-btn">‹</span><span class="pagination-btn active">1</span><span class="pagination-btn">2</span><span class="pagination-btn">3</span><span class="pagination-btn">›</span></div>
+    </main>
+  </div>
+
+</body>
+</html>
