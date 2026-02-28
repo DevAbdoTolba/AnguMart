@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AnguMart — Your shopping cart with full pricing breakdown." />
+  <title>AnguMart — My Cart</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="../public/home.html" class="navbar-brand">AnguMart</a>
+      <div class="search-bar">
+        <span class="search-bar-icon">🔍</span>
+        <input type="text" placeholder="Search products..." />
+      </div>
+      <div class="navbar-links">
+        <a href="wishlist.html">♡ Wishlist</a>
+        <a href="cart.html" class="navbar-icon active">🛒<span class="badge">3</span></a>
+        <a href="profile.html" style="display:flex;align-items:center;gap:8px;">
+          <span style="width:32px;height:32px;border-radius:50%;background:var(--accent-muted);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;">A</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="padding-top: var(--space-xl); padding-bottom: var(--space-3xl);">
+    <h1 class="section-heading" style="font-size: 1.5rem;">My Cart <span class="text-secondary font-normal text-lg">(3 items)</span></h1>
+
+    <div class="cart-layout">
+      <div>
+        <div class="cart-item">
+          <div class="cart-item-img" style="background: linear-gradient(135deg, #1a1a2e, #16213e);"></div>
+          <div class="cart-item-info">
+            <p class="cart-item-title">Wireless Noise-Cancel Headphones</p>
+            <p class="text-xs text-muted">In stock: 24 available</p>
+            <p class="cart-item-price">$249.99</p>
+            <div class="cart-item-qty"><span class="qty-btn">−</span><span class="qty-value">1</span><span class="qty-btn">+</span></div>
+          </div>
+          <button class="btn-icon btn-ghost" style="color: var(--danger); align-self: flex-start;">🗑</button>
+        </div>
+        <div class="cart-item">
+          <div class="cart-item-img" style="background: linear-gradient(135deg, #0f3460, #533483);"></div>
+          <div class="cart-item-info">
+            <p class="cart-item-title">Smart Watch Series X</p>
+            <p class="text-xs text-muted">In stock: 8 available</p>
+            <p class="cart-item-price">$399.00</p>
+            <div class="cart-item-qty"><span class="qty-btn">−</span><span class="qty-value">1</span><span class="qty-btn">+</span></div>
+          </div>
+          <button class="btn-icon btn-ghost" style="color: var(--danger); align-self: flex-start;">🗑</button>
+        </div>
+        <div class="cart-item">
+          <div class="cart-item-img" style="background: linear-gradient(135deg, #2c3e50, #4ca1af);"></div>
+          <div class="cart-item-info">
+            <p class="cart-item-title">Premium Cotton Hoodie</p>
+            <p class="text-xs text-muted">In stock: 45 available</p>
+            <p class="cart-item-price">$79.50</p>
+            <div class="cart-item-qty"><span class="qty-btn">−</span><span class="qty-value">2</span><span class="qty-btn">+</span></div>
+          </div>
+          <button class="btn-icon btn-ghost" style="color: var(--danger); align-self: flex-start;">🗑</button>
+        </div>
+      </div>
+
+      <div class="cart-summary">
+        <h3 class="font-semibold" style="margin-bottom: var(--space-md);">Order Summary</h3>
+        <div class="cart-summary-row"><span>Subtotal (4 items)</span><span class="text-primary">$808.49</span></div>
+        <div class="cart-summary-row"><span>Shipping</span><span class="text-accent">Free</span></div>
+        <div class="cart-summary-row"><span>Tax (14%)</span><span class="text-primary">$113.19</span></div>
+        <div class="cart-summary-total"><span>Total</span><span>$921.68</span></div>
+        <a href="checkout.html" class="btn btn-primary btn-full btn-lg" style="margin-top: var(--space-md);">Proceed to Checkout</a>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

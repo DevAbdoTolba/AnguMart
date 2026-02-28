@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AnguMart Admin — Moderate product reviews." />
+  <title>AnguMart Admin — Reviews</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">AnguMart</div>
+      <nav class="admin-sidebar-links">
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="users.html">👥 Users</a>
+        <a href="products.html">📦 Products</a>
+        <a href="categories.html">🏷️ Categories</a>
+        <a href="orders.html">🧾 Orders</a>
+        <a href="reviews.html" class="active">⭐ Reviews</a>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header"><h1 class="admin-title">Manage Reviews</h1><p class="text-sm text-secondary">256 total reviews · 5 flagged</p></div>
+
+      <div class="search-bar" style="max-width: 400px; margin-bottom: var(--space-lg);"><span class="search-bar-icon">🔍</span><input type="text" placeholder="Search reviews by product or user..." /></div>
+
+      <div class="card card-bordered" style="margin-bottom: var(--space-md);">
+        <div class="flex justify-between items-start" style="margin-bottom: var(--space-sm);">
+          <div class="flex gap-sm items-center"><div class="review-avatar">A</div><div><p class="review-author">Ahmed Hassan</p><p class="text-xs text-muted">on <strong>Wireless Noise-Cancel Headphones</strong> · Feb 15, 2026</p></div></div>
+          <button class="btn btn-danger btn-sm">🗑 Delete</button>
+        </div>
+        <p class="review-stars" style="margin-bottom: var(--space-xs);">★★★★★</p>
+        <p class="review-text">Absolutely incredible sound quality! The noise cancellation is on another level.</p>
+      </div>
+
+      <div class="card card-bordered" style="margin-bottom: var(--space-md);">
+        <div class="flex justify-between items-start" style="margin-bottom: var(--space-sm);">
+          <div class="flex gap-sm items-center"><div class="review-avatar">S</div><div><p class="review-author">Sara Mohamed</p><p class="text-xs text-muted">on <strong>Premium Cotton Hoodie</strong> · Feb 14, 2026</p></div></div>
+          <button class="btn btn-danger btn-sm">🗑 Delete</button>
+        </div>
+        <p class="review-stars" style="margin-bottom: var(--space-xs);">★★★★☆</p>
+        <p class="review-text">Nice hoodie, very soft material. The fit is a bit large — I'd recommend going one size down.</p>
+      </div>
+
+      <!-- Spam review -->
+      <div class="card" style="margin-bottom: var(--space-md); border: 1px solid var(--danger); background: rgba(231,76,60,.05);">
+        <div class="flex justify-between items-start" style="margin-bottom: var(--space-sm);">
+          <div class="flex gap-sm items-center"><div class="review-avatar" style="background: rgba(231,76,60,.15); color: var(--danger);">X</div><div><p class="review-author">xSpamUser123</p><p class="text-xs text-muted">on <strong>Running Shoes Pro</strong> · Feb 13, 2026</p><span class="status status-danger" style="margin-top: 4px;">Flagged as spam</span></div></div>
+          <button class="btn btn-danger btn-sm">🗑 Delete</button>
+        </div>
+        <p class="review-stars" style="margin-bottom: var(--space-xs);">★☆☆☆☆</p>
+        <p class="review-text">BUY CHEAP SHOES AT www.scamsite.com!!! BEST DEALS CLICK NOW!!!</p>
+      </div>
+
+      <div class="card card-bordered" style="margin-bottom: var(--space-md);">
+        <div class="flex justify-between items-start" style="margin-bottom: var(--space-sm);">
+          <div class="flex gap-sm items-center"><div class="review-avatar">O</div><div><p class="review-author">Omar Ali</p><p class="text-xs text-muted">on <strong>Smart Watch Series X</strong> · Feb 12, 2026</p></div></div>
+          <button class="btn btn-danger btn-sm">🗑 Delete</button>
+        </div>
+        <p class="review-stars" style="margin-bottom: var(--space-xs);">★★★★★</p>
+        <p class="review-text">This watch is amazing. Battery lasts 5 days with heavy use. Highly recommend for fitness enthusiasts.</p>
+      </div>
+
+      <div class="pagination" style="margin-top: var(--space-lg);"><span class="pagination-btn">‹</span><span class="pagination-btn active">1</span><span class="pagination-btn">2</span><span class="pagination-btn">3</span><span class="pagination-btn">›</span></div>
+    </main>
+  </div>
+
+</body>
+</html>

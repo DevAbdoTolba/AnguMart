@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AnguMart — Checkout: select address and payment method." />
+  <title>AnguMart — Checkout</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR (Logged In) ===== -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="home.html" class="navbar-brand">AnguMart</a>
+      <div class="navbar-links">
+        <a href="customer-cart.html">← Back to Cart</a>
+        <a href="profile.html" style="display:flex;align-items:center;gap:8px;">
+          <span style="width:32px;height:32px;border-radius:50%;background:var(--accent-muted);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;">A</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN ===== -->
+  <main class="container" style="padding-top: var(--space-xl); padding-bottom: var(--space-3xl);">
+    <h1 class="section-heading" style="font-size: 1.5rem; margin-bottom: var(--space-xl);">Checkout</h1>
+
+    <div class="checkout-layout">
+      <div>
+        <!-- Saved Addresses -->
+        <div class="card card-bordered" style="margin-bottom: var(--space-lg);">
+          <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: var(--space-lg);">Shipping Address</h2>
+
+          <!-- Address Option 1 (selected) -->
+          <div class="payment-option selected" style="margin-bottom: var(--space-sm);">
+            <div class="payment-option-radio"></div>
+            <div>
+              <p class="payment-option-label">Home</p>
+              <p class="text-sm text-secondary">123 Main Street, Cairo 11511, Egypt</p>
+            </div>
+          </div>
+
+          <!-- Address Option 2 -->
+          <div class="payment-option" style="margin-bottom: var(--space-sm);">
+            <div class="payment-option-radio"></div>
+            <div>
+              <p class="payment-option-label">Office</p>
+              <p class="text-sm text-secondary">45 Tahrir Square, Floor 3, Cairo 11511, Egypt</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="card card-bordered">
+          <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: var(--space-lg);">Payment Method</h2>
+
+          <div class="payment-options">
+            <div class="payment-option selected">
+              <div class="payment-option-radio"></div>
+              <div>
+                <p class="payment-option-label">PayPal</p>
+                <p class="text-sm text-muted">Redirect to PayPal to complete payment</p>
+              </div>
+            </div>
+
+            <div class="payment-option">
+              <div class="payment-option-radio"></div>
+              <div>
+                <p class="payment-option-label">Wallet Balance</p>
+                <p class="text-sm text-muted">Current balance: <span class="text-accent font-semibold">$1,250.00</span></p>
+              </div>
+            </div>
+
+            <div class="payment-option">
+              <div class="payment-option-radio"></div>
+              <div>
+                <p class="payment-option-label">Cash on Delivery</p>
+                <p class="text-sm text-muted">Pay when your order arrives</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="order-success.html" class="btn btn-primary btn-full btn-lg" style="margin-top: var(--space-lg);">Place Order — $921.68</a>
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="cart-summary">
+        <h3 class="font-semibold" style="margin-bottom: var(--space-lg);">Order Summary</h3>
+
+        <div style="display: flex; gap: var(--space-sm); padding: var(--space-sm) 0; border-bottom: 1px solid var(--border);">
+          <div style="width:48px;height:48px;border-radius:var(--radius-md);background:linear-gradient(135deg,#1a1a2e,#16213e);flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <p class="text-sm font-medium">Wireless Headphones</p>
+            <p class="text-xs text-muted">Qty: 1</p>
+          </div>
+          <p class="text-sm font-semibold">$249.99</p>
+        </div>
+
+        <div style="display: flex; gap: var(--space-sm); padding: var(--space-sm) 0; border-bottom: 1px solid var(--border);">
+          <div style="width:48px;height:48px;border-radius:var(--radius-md);background:linear-gradient(135deg,#0f3460,#533483);flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <p class="text-sm font-medium">Smart Watch Series X</p>
+            <p class="text-xs text-muted">Qty: 1</p>
+          </div>
+          <p class="text-sm font-semibold">$399.00</p>
+        </div>
+
+        <div style="display: flex; gap: var(--space-sm); padding: var(--space-sm) 0; border-bottom: 1px solid var(--border);">
+          <div style="width:48px;height:48px;border-radius:var(--radius-md);background:linear-gradient(135deg,#2c3e50,#4ca1af);flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <p class="text-sm font-medium">Premium Cotton Hoodie</p>
+            <p class="text-xs text-muted">Qty: 2</p>
+          </div>
+          <p class="text-sm font-semibold">$159.00</p>
+        </div>
+
+        <div class="cart-summary-row" style="margin-top: var(--space-sm);">
+          <span>Subtotal</span>
+          <span class="text-primary">$808.49</span>
+        </div>
+        <div class="cart-summary-row">
+          <span>Shipping</span>
+          <span class="text-accent">Free</span>
+        </div>
+        <div class="cart-summary-row">
+          <span>Tax (14%)</span>
+          <span class="text-primary">$113.19</span>
+        </div>
+        <div class="cart-summary-total">
+          <span>Total</span>
+          <span>$921.68</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
