@@ -1,0 +1,13 @@
+.product-card-hover {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.product-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important;
+}
+
+/* Base body background for #121212 already addressed by Bootstraps data-bs-theme="dark" but we can enforce it here if needed */
+:host {
+  display: block;
+}
