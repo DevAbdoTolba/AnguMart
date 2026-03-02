@@ -1,1 +1,61 @@
-<p>login works!</p>
+<div class="auth-wrapper d-flex align-items-center justify-content-center min-vh-100">
+  <div class="auth-card shadow-lg p-4 text-center">
+    <h2 class="text-success fw-bold mb-1">Welcome back</h2>
+    <p class="text-secondary small mb-4">Log in to continue shopping</p>
+
+    @if (errorMessage) {
+      <div class="alert alert-danger small py-2" role="alert">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="text-start">
+      
+      <div class="mb-3">
+        <label class="form-label text-white small fw-bold">Email Address</label>
+        <input type="email" formControlName="email" 
+               placeholder="you@example.com"
+               class="form-control bg-dark text-white border-secondary"
+               [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+      </div>
+
+      <div class="mb-3">
+        <div class="d-flex justify-content-between">
+          <label class="form-label text-white small fw-bold">Password</label>
+        </div>
+        <div class="input-group">
+          <input [type]="showPassword ? 'text' : 'password'" 
+                 formControlName="password" 
+                 placeholder="Enter your password"
+                 class="form-control bg-dark text-white border-secondary border-end-0"
+                 [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          <button type="button" (click)="togglePassword()" 
+                  class="btn btn-outline-secondary border-secondary border-start-0 bg-dark text-secondary">
+            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="isLoading" 
+              class="btn btn-success w-100 rounded-pill fw-bold py-2 mt-3 d-flex align-items-center justify-content-center">
+        @if (isLoading) {
+          <span class="spinner-border spinner-border-sm me-2"></span>
+          <span>Logging in...</span>
+        } @else {
+          <span>Log In</span>
+        }
+      </button>
+
+      <div class="d-flex align-items-center my-4 text-muted">
+        <hr class="flex-grow-1 border-secondary">
+        <span class="mx-2 small">or</span>
+        <hr class="flex-grow-1 border-secondary">
+      </div>
+
+      <p class="text-center text-secondary small">
+        Don't have an account? 
+        <a routerLink="/signup" class="text-success fw-bold text-decoration-none">Sign up for free</a>
+      </p>
+    </form>
+  </div>
+</div>
