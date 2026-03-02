@@ -1,37 +1,63 @@
-<!-- ===== MAIN ===== -->
-<main class="container" style="padding-top: var(--space-xl); padding-bottom: var(--space-3xl);">
-
+<div class="container py-5">
   <!-- Breadcrumb -->
-  <p class="text-sm text-secondary" style="margin-bottom: var(--space-lg);">
-    <a href="home.html">Home</a> / <a href="home.html">Electronics</a> / <span class="text-primary">Wireless Noise-Cancel Headphones</span>
+  <p class="fs-6 text-secondary mb-4">
+    <a href="home.html" class="text-decoration-none text-secondary">Home</a> /
+    <a href="home.html" class="text-decoration-none text-secondary">{{ product.category }}</a> /
+    <span class="text-primary">{{ product.name }}</span>
   </p>
 
   <!-- Product Detail Layout -->
-  <div class="product-detail-layout">
-    <div class="product-detail-img" style="background: linear-gradient(135deg, #1a1a2e, #16213e); min-height: 480px;"></div>
-    <div>
-      <h1 class="product-detail-title">Wireless Noise-Cancel Headphones</h1>
-      <div class="product-detail-meta">
-        <span class="product-card-rating" style="font-size: 1rem;">★★★★★</span>
-        <span class="text-secondary">128 reviews</span>
+  <div class="row gx-lg-5 mb-5">
+    <div class="col-lg-6 mb-4 mb-lg-0">
+      <img src="https://picsum.photos/600/480" alt="{{ product.name }}" class="rounded-4 w-100 object-fit-cover shadow" style="height: 100%; min-height: 480px;" />
+    </div>
+    <div class="col-lg-6">
+      <h1 class="fw-bold fs-1 mb-2">{{ product.name }}</h1>
+      <div class="d-flex align-items-center mb-4 mt-2">
+        <div class="text-warning fs-5 me-2">
+          @for (star of getStars(product.rating); track $index) {
+            <i class="bi bi-star-fill"></i>
+          }
+          @for (star of getEmptyStars(product.rating); track $index) {
+            <i class="bi bi-star"></i>
+          }
+        </div>
+        <span class="text-secondary">{{ product.reviewsCount }} reviews</span>
       </div>
-      <p class="product-detail-price">$249.99</p>
-      <div style="margin-bottom: var(--space-lg);">
-        <span class="stock-badge in-stock">● In Stock — 24 left</span>
+      
+      <p class="fs-4 fw-bold text-primary mb-3">{{ product.price | currency }}</p>
+      
+      <div class="mb-4 mt-4">
+        @if (product.stock > 0) {
+          <span class="badge rounded-pill" style="background-color: rgba(29, 185, 84, 0.15); color: #1DB954; font-size: 0.85rem; padding: 6px 14px;">
+            <i class="bi bi-circle-fill small me-2"></i> In Stock &mdash; {{ product.stock }} left
+          </span>
+        } @else {
+          <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger" style="font-size: 0.85rem; padding: 6px 14px;">
+            <i class="bi bi-x-circle-fill small me-2"></i> Out of Stock
+          </span>
+        }
       </div>
-      <p class="product-detail-desc">
-        Experience studio-quality sound with our flagship wireless headphones. Featuring industry-leading active noise cancellation, 30-hour battery life, and ultra-comfortable over-ear cushions designed for all-day listening. Premium drivers deliver rich bass and crystal-clear highs. Bluetooth 5.3 for seamless connectivity with all your devices.
+      
+      <p class="text-secondary mb-4 lh-lg fs-6">
+        {{ product.description }}
       </p>
-      <div class="flex gap-md" style="margin-bottom: var(--space-xl);">
-        <button class="btn btn-primary btn-lg" style="flex:1;">Add to Cart</button>
-        <button class="btn btn-secondary btn-lg">♡</button>
+      
+      <div class="d-flex gap-3 mb-4 mt-5">
+        <button class="btn btn-primary btn-lg flex-grow-1 fw-bold rounded-pill" [disabled]="product.stock === 0">
+          Add to Cart
+        </button>
+        <button class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; border-width: 1px;">
+          <i class="bi bi-heart fs-5"></i>
+        </button>
       </div>
-      <div class="card card-bordered" style="padding: var(--space-md);">
-        <div class="flex items-center gap-md">
-          <span style="font-size: 1.25rem;">🚚</span>
-          <div>
-            <p class="font-semibold text-sm">Free Shipping</p>
-            <p class="text-xs text-muted">Estimated delivery: 3–5 business days</p>
+      
+      <div class="card bg-surface border-0 rounded-3 p-3 mt-4">
+        <div class="d-flex align-items-center gap-3">
+          <i class="bi bi-truck fs-3 text-secondary"></i>
+          <div class="text-start">
+            <p class="fw-semibold mb-0 fs-6">Free Shipping</p>
+            <p class="text-muted mb-0" style="font-size: 0.85rem;">Estimated delivery: 3–5 business days</p>
           </div>
         </div>
       </div>
@@ -39,46 +65,33 @@
   </div>
 
   <!-- Reviews Section -->
-  <section style="margin-top: var(--space-3xl);">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-lg);">
-      <h2 class="section-heading" style="margin-bottom:0;">Customer Reviews</h2>
-      <a href="../customer/write-review.html" class="btn btn-secondary btn-sm">Write a Review</a>
+  <section class="mt-5 pt-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <h2 class="mb-0 fw-bold fs-3">Customer Reviews</h2>
+      <a href="#" class="btn btn-outline-secondary btn-sm rounded-pill fw-medium px-4 py-2">Write a Review</a>
     </div>
 
-    <div class="review">
-      <div class="review-header">
-        <div class="review-avatar">A</div>
-        <div>
-          <p class="review-author">Ahmed K.</p>
-          <p class="review-date">Feb 15, 2026</p>
+    @for (review of product.reviews; track review.id) {
+      <div class="py-4 border-bottom border-secondary">
+        <div class="d-flex align-items-center mb-2">
+          <div class="rounded-circle bg-elevated text-primary d-flex align-items-center justify-content-center fw-bold me-3" style="width: 40px; height: 40px;">
+            {{ review.avatar }}
+          </div>
+          <div>
+            <p class="fw-semibold mb-0 fs-6">{{ review.author }}</p>
+            <p class="text-muted m-0" style="font-size: 0.85rem;">{{ review.date }}</p>
+          </div>
         </div>
-      </div>
-      <p class="review-stars">★★★★★</p>
-      <p class="review-text">Absolutely incredible sound quality! The noise cancellation is on another level. I use these daily for commuting and they block out everything. Battery lasts forever. Best headphones I've ever owned.</p>
-    </div>
-
-    <div class="review">
-      <div class="review-header">
-        <div class="review-avatar">S</div>
-        <div>
-          <p class="review-author">Sarah M.</p>
-          <p class="review-date">Feb 10, 2026</p>
+        <div class="text-warning mb-2" style="font-size: 0.95rem;">
+          @for (star of getStars(review.rating); track $index) {
+            <i class="bi bi-star-fill"></i>
+          }
+          @for (star of getEmptyStars(review.rating); track $index) {
+            <i class="bi bi-star"></i>
+          }
         </div>
+        <p class="text-secondary mb-0" style="font-size: 0.95rem; line-height: 1.6;">{{ review.text }}</p>
       </div>
-      <p class="review-stars">★★★★☆</p>
-      <p class="review-text">Great headphones, very comfortable. Sound is excellent for the price. Only downside is they're a bit heavy for long runs, but perfect for the gym and commutes.</p>
-    </div>
-
-    <div class="review">
-      <div class="review-header">
-        <div class="review-avatar">M</div>
-        <div>
-          <p class="review-author">Mohamed R.</p>
-          <p class="review-date">Jan 28, 2026</p>
-        </div>
-      </div>
-      <p class="review-stars">★★★★★</p>
-      <p class="review-text">Worth every penny. The build quality is premium and the ANC is fantastic. Pairs instantly with my phone. Would highly recommend to anyone looking for top-tier wireless headphones.</p>
-    </div>
+    }
   </section>
-</main>
+</div>
