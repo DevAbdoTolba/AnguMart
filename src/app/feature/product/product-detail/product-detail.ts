@@ -26,43 +26,7 @@ export interface ProductDetailData {
   selector: 'app-product-detail',
   imports: [CommonModule],
   templateUrl: './product-detail.html',
-  styles: [`
-    :host {
-      display: block;
-      background-color: #121212;
-      color: #ffffff;
-      min-height: 100vh;
-      font-family: 'Inter', sans-serif;
-    }
-    .text-primary { color: #1DB954 !important; }
-    .text-secondary { color: #b3b3b3 !important; }
-    .text-muted { color: #727272 !important; }
-    .bg-surface { background-color: #181818 !important; }
-    .bg-elevated { background-color: #282828 !important; }
-    .text-warning { color: #f1c40f !important; }
-    .border-secondary { border-color: #333333 !important; }
-    
-    .btn-primary {
-      background-color: #1DB954 !important;
-      border-color: #1DB954 !important;
-      color: #121212 !important;
-    }
-    .btn-primary:hover, .btn-primary:active {
-      background-color: #1ed760 !important;
-      border-color: #1ed760 !important;
-      color: #121212 !important;
-    }
-    
-    .btn-outline-secondary {
-      background-color: transparent !important;
-      color: #ffffff !important;
-      border-color: #404040 !important;
-    }
-    .btn-outline-secondary:hover {
-      border-color: #ffffff !important;
-      color: #ffffff !important;
-    }
-  `]
+  styles: []
 })
 export class ProductDetail implements OnInit {
   product!: ProductDetailData;
