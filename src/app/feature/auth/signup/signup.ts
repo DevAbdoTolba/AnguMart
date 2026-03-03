@@ -12,20 +12,32 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class Signup {
   signupForm: FormGroup;
-
   isLoading: boolean = false;
-  errorMessages = [
-    { type: 'required', message: 'This field is mandatory' },
-    { type: 'email', message: 'Please enter a valid email' },
-    { type: 'minlength', message: 'Minimum length not reached' }
-  ];
+  showPassword: boolean = false; 
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.signupForm = this.fb.group({
-      fullName: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern('^01[0125][0-9]{8}$')]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      fullName: ['', [
+        Validators.required, 
+        Validators.minLength(3), 
+        Validators.maxLength(60)
+      ]],
+      email: ['', [
+        Validators.required, 
+        Validators.email
+      ]],
+      phone: ['', [
+        Validators.required, 
+        Validators.pattern('^01[0125][0-9]{8}$'),
+        Validators.minLength(11), 
+        Validators.maxLength(11)
+      ]],
+      password: ['', [
+        Validators.required, 
+        Validators.minLength(8), 
+        Validators.maxLength(50),
+        Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^0-9a-zA-Z]).{8,50}$')
+      ]],
       confirmPassword: ['', [Validators.required]],
     }, { 
       validators: this.passwordMatchValidator 
@@ -37,7 +49,6 @@ export class Signup {
     const confirm = control.get('confirmPassword')?.value;
     return password === confirm ? null : { passwordMismatch: true };
   }
-  showPassword: boolean = false; 
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -46,11 +57,11 @@ export class Signup {
   onSubmit() {
     if (this.signupForm.valid) {
       this.isLoading = true;
-      console.log('Form Submitted!', this.signupForm.value);
       setTimeout(() => {
-      this.isLoading = false; 
-      this.router.navigate(['/login']);
-    }, 2000);    } else {
+        this.isLoading = false; 
+        this.router.navigate(['/login']);
+      }, 2000);
+    } else {
       this.signupForm.markAllAsTouched(); 
     }
   }
