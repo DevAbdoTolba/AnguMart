@@ -10,6 +10,5 @@ labels: 'integration'
 - [ ] `METHOD /api/path`
 
 ### Tasks
-- [ ] Update API service
 - [ ] Connect component to service
 - [ ] Handle loading and errors
