@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { ProductListResponse, ProductQueryParams } from '../models/product.model';
+import { ProductDetailResponse, ProductListResponse, ProductQueryParams } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root',
@@ -25,5 +25,9 @@ export class ProductService {
     }
 
     return this.http.get<ProductListResponse>(this.apiUrl, { params });
+  }
+
+  getProductById(id: string): Observable<ProductDetailResponse> {
+    return this.http.get<ProductDetailResponse>(`${this.apiUrl}/${id}`);
   }
 }

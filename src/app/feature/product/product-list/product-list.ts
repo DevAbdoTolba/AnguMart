@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { Product, ProductQueryParams } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
 
 @Component({
   selector: 'app-product-list',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
 })

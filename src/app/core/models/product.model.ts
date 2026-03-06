@@ -4,8 +4,18 @@ export interface Product {
   price: number;
   stock?: number;
   ratingsAverage?: number;
+  description?: string;
+  category?: string;
+  brand?: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface ProductDetailResponse {
+  status: string;
+  data: {
+    data: Product;
+  };
 }
 
 export interface ProductListResponse {
