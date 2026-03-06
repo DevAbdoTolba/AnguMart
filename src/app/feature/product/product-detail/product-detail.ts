@@ -1,80 +1,102 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-export interface ProductReview {
-  id: string;
-  author: string;
-  avatar: string;
-  date: string;
-  rating: number;
-  text: string;
-}
-
-export interface ProductDetailData {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  rating: number;
-  reviewsCount: number;
-  stock: number;
-  description: string;
-  reviews: ProductReview[];
-}
+import { Product } from '../../../core/models/product.model';
+import { ProductService } from '../../../core/services/product.service';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './product-detail.html',
-  styles: []
+  styles: [],
 })
 export class ProductDetail implements OnInit {
-  product!: ProductDetailData;
+  product: Product | null = null;
+  isLoading = true;
+  errorMessage = '';
+
+  addingToCart = false;
+  cartMessage = '';
+  cartMessageType: 'success' | 'error' = 'success';
+
+  quantity = 1;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private productService: ProductService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit(): void {
-    this.product = {
-      id: '1',
-      name: 'Wireless Noise-Cancel Headphones',
-      category: 'Electronics',
-      price: 249.99,
-      rating: 5,
-      reviewsCount: 128,
-      stock: 24,
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      reviews: [
-        {
-          id: 'r1',
-          author: 'Ahmed K.',
-          avatar: 'A',
-          date: 'Feb 15, 2026',
-          rating: 5,
-          text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-        },
-        {
-          id: 'r2',
-          author: 'Sarah M.',
-          avatar: 'S',
-          date: 'Feb 10, 2026',
-          rating: 4,
-          text: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-        },
-        {
-          id: 'r3',
-          author: 'Mohamed R.',
-          avatar: 'M',
-          date: 'Jan 28, 2026',
-          rating: 5,
-          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.'
-        }
-      ]
-    };
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.loadProduct(id);
+    } else {
+      this.errorMessage = 'Product not found.';
+      this.isLoading = false;
+    }
+  }
+
+  loadProduct(id: string): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.productService.getProductById(id).subscribe({
+      next: (response) => {
+        this.product = response.data.data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load product:', err);
+        this.errorMessage = 'Failed to load product details. Please try again.';
+        this.isLoading = false;
+      },
+    });
+  }
+
+  addToCart(): void {
+    if (!this.product || this.addingToCart) return;
+
+    this.addingToCart = true;
+    this.cartMessage = '';
+
+    this.cartService.addItem(this.product._id, this.quantity).subscribe({
+      next: () => {
+        this.cartMessage = 'Added to cart!';
+        this.cartMessageType = 'success';
+        this.addingToCart = false;
+        this.quantity = 1;
+      },
+      error: (err) => {
+        console.error('Failed to add to cart:', err);
+        this.cartMessage = err.error?.message || 'Could not add to cart. Please try again.';
+        this.cartMessageType = 'error';
+        this.addingToCart = false;
+      },
+    });
+  }
+
+  incrementQuantity(): void {
+    const max = this.product?.stock ?? 99;
+    if (this.quantity < max) {
+      this.quantity++;
+    }
+  }
+
+  decrementQuantity(): void {
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
   }
 
   getStars(rating: number): number[] {
-    return Array(Math.floor(rating)).fill(0);
+    return Array(Math.floor(rating ?? 0)).fill(0);
   }
 
   getEmptyStars(rating: number): number[] {
-    return Array(5 - Math.floor(rating)).fill(0);
+    return Array(5 - Math.floor(rating ?? 0)).fill(0);
   }
 }
