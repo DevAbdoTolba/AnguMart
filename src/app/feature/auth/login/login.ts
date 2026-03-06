@@ -40,7 +40,7 @@ export class Login {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
           this.isLoading = false;
-          localStorage.setItem('userToken', res.token);
+          localStorage.setItem('angumart_token', res.token);
           
           this.router.navigate(['/signup']);
         },
