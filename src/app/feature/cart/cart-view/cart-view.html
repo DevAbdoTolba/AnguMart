@@ -1,1 +1,82 @@
-<p>cart-view works!</p>
+<div class="container py-5">
+  <h1 class="fw-bold fs-2 mb-4">
+    Shopping Cart <span class="fw-normal fs-5 text-body-secondary">({{ totalItemsCount }} items)</span>
+  </h1>
+
+  <div class="row g-4">
+    <!-- Cart Items -->
+    <div class="col-lg-8">
+      @for (item of cartItems; track item.id) {
+        <div class="d-flex align-items-center py-3 border-bottom">
+          <img [src]="item.image" [alt]="item.name" class="rounded-3 me-3 bg-body-tertiary" width="80" height="80" />
+
+          <div class="flex-grow-1">
+            <p class="fw-semibold mb-1">{{ item.name }}</p>
+            <p class="fw-bold text-success mb-2">{{ item.price | currency }}</p>
+
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center p-0"
+                      style="width:32px;height:32px;"
+                      (click)="decreaseQty(item)">
+                <i class="bi bi-dash"></i>
+              </button>
+              <span class="fw-bold text-center" style="min-width:24px;">{{ item.qty }}</span>
+              <button class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center p-0"
+                      style="width:32px;height:32px;"
+                      (click)="increaseQty(item)">
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <button class="btn btn-link text-danger p-0 align-self-start" (click)="removeItem(item)">
+            <i class="bi bi-trash3 fs-5"></i>
+          </button>
+        </div>
+      }
+
+      @if (cartItems.length === 0) {
+        <div class="text-center py-5 border rounded-3 mt-3">
+          <i class="bi bi-cart-x fs-1 text-body-secondary d-block mb-3"></i>
+          <h5 class="fw-bold">Your cart is empty</h5>
+          <p class="text-body-secondary mb-3">Looks like you haven't added anything to your cart yet.</p>
+          <a href="#" class="btn btn-success rounded-pill px-4">Continue Shopping</a>
+        </div>
+      }
+    </div>
+
+    <!-- Order Summary -->
+    <div class="col-lg-4">
+      <div class="card border">
+        <div class="card-body">
+          <h5 class="fw-bold mb-3">Order Summary</h5>
+
+          <div class="d-flex justify-content-between mb-2 text-body-secondary">
+            <span>Subtotal</span>
+            <span class="text-body">{{ subtotal | currency }}</span>
+          </div>
+
+          <div class="d-flex justify-content-between mb-3 text-body-secondary">
+            <span>Shipping</span>
+            <span class="text-success fw-medium">Free</span>
+          </div>
+
+          <hr />
+
+          <div class="d-flex justify-content-between mb-3">
+            <span class="fw-bold fs-5">Total</span>
+            <span class="fw-bold fs-5">{{ subtotal | currency }}</span>
+          </div>
+
+          <button class="btn btn-success w-100 rounded-pill fw-bold py-2 fs-6" [disabled]="cartItems.length === 0">
+            Proceed to Checkout
+          </button>
+
+          <p class="text-center text-body-secondary small mt-3 mb-0">
+            or <a href="#" class="text-success text-decoration-none fw-medium">log in</a> for faster checkout
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
