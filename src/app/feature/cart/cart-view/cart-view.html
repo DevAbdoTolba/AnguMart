@@ -1,82 +1,145 @@
-<div class="container py-5">
-  <h1 class="fw-bold fs-2 mb-4">
-    Shopping Cart <span class="fw-normal fs-5 text-body-secondary">({{ totalItemsCount }} items)</span>
-  </h1>
+<div class="app-wrapper py-5">
+  <div class="container">
+    <!-- Header -->
+    <div class="d-flex align-items-center gap-2 mb-4 mt-2">
+      <h1 class="mb-0 h4 fw-bold">Shopping Cart</h1>
+      @if (!isLoading && !errorMessage) {
+        <span class="text-secondary small">({{ totalItemCount }} {{ totalItemCount === 1 ? 'item' : 'items' }})</span>
+      }
+    </div>
 
-  <div class="row g-4">
-    <!-- Cart Items -->
-    <div class="col-lg-8">
-      @for (item of cartItems; track item.id) {
-        <div class="d-flex align-items-center py-3 border-bottom">
-          <img [src]="item.image" [alt]="item.name" class="rounded-3 me-3 bg-body-tertiary" width="80" height="80" />
-
-          <div class="flex-grow-1">
-            <p class="fw-semibold mb-1">{{ item.name }}</p>
-            <p class="fw-bold text-success mb-2">{{ item.price | currency }}</p>
-
-            <div class="d-flex align-items-center gap-2">
-              <button class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center p-0"
-                      style="width:32px;height:32px;"
-                      (click)="decreaseQty(item)">
-                <i class="bi bi-dash"></i>
-              </button>
-              <span class="fw-bold text-center" style="min-width:24px;">{{ item.qty }}</span>
-              <button class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center p-0"
-                      style="width:32px;height:32px;"
-                      (click)="increaseQty(item)">
-                <i class="bi bi-plus"></i>
-              </button>
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="row g-4">
+        <div class="col-lg-8">
+          @for (i of [1, 2, 3]; track i) {
+            <div class="card bg-dark border-0 rounded-4 mb-3 placeholder-glow" style="--bs-bg-opacity: 0.5;">
+              <div class="card-body d-flex gap-3 p-3">
+                <div class="placeholder rounded-3" style="width: 120px; height: 100px; background-color: #2a2a2a; flex-shrink: 0;"></div>
+                <div class="flex-grow-1">
+                  <span class="placeholder col-6 mb-2 rounded" style="height: 1rem;"></span>
+                  <span class="placeholder col-4 mb-2 rounded" style="height: 1rem;"></span>
+                  <span class="placeholder col-3 rounded" style="height: 1.25rem;"></span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="col-lg-4">
+          <div class="card bg-dark border-0 rounded-4 placeholder-glow" style="--bs-bg-opacity: 0.5;">
+            <div class="card-body p-4">
+              <span class="placeholder col-5 mb-3 rounded" style="height: 1.25rem;"></span>
+              <span class="placeholder col-12 mb-2 rounded" style="height: 1rem;"></span>
+              <span class="placeholder col-12 mb-3 rounded" style="height: 1rem;"></span>
+              <span class="placeholder col-12 rounded" style="height: 2.5rem;"></span>
             </div>
           </div>
-
-          <button class="btn btn-link text-danger p-0 align-self-start" (click)="removeItem(item)">
-            <i class="bi bi-trash3 fs-5"></i>
-          </button>
-        </div>
-      }
-
-      @if (cartItems.length === 0) {
-        <div class="text-center py-5 border rounded-3 mt-3">
-          <i class="bi bi-cart-x fs-1 text-body-secondary d-block mb-3"></i>
-          <h5 class="fw-bold">Your cart is empty</h5>
-          <p class="text-body-secondary mb-3">Looks like you haven't added anything to your cart yet.</p>
-          <a href="#" class="btn btn-success rounded-pill px-4">Continue Shopping</a>
-        </div>
-      }
-    </div>
-
-    <!-- Order Summary -->
-    <div class="col-lg-4">
-      <div class="card border">
-        <div class="card-body">
-          <h5 class="fw-bold mb-3">Order Summary</h5>
-
-          <div class="d-flex justify-content-between mb-2 text-body-secondary">
-            <span>Subtotal</span>
-            <span class="text-body">{{ subtotal | currency }}</span>
-          </div>
-
-          <div class="d-flex justify-content-between mb-3 text-body-secondary">
-            <span>Shipping</span>
-            <span class="text-success fw-medium">Free</span>
-          </div>
-
-          <hr />
-
-          <div class="d-flex justify-content-between mb-3">
-            <span class="fw-bold fs-5">Total</span>
-            <span class="fw-bold fs-5">{{ subtotal | currency }}</span>
-          </div>
-
-          <button class="btn btn-success w-100 rounded-pill fw-bold py-2 fs-6" [disabled]="cartItems.length === 0">
-            Proceed to Checkout
-          </button>
-
-          <p class="text-center text-body-secondary small mt-3 mb-0">
-            or <a href="#" class="text-success text-decoration-none fw-medium">log in</a> for faster checkout
-          </p>
         </div>
       </div>
-    </div>
+    }
+
+    <!-- Error State -->
+    @if (errorMessage) {
+      <div class="text-center py-5">
+        <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-3 d-block"></i>
+        <p class="text-muted mb-3">{{ errorMessage }}</p>
+        <button class="btn btn-sm px-4 py-2 fw-semibold rounded-3" style="background-color: #1DB954; color: #121212;" (click)="loadCart()">
+          <i class="bi bi-arrow-clockwise me-1"></i> Retry
+        </button>
+      </div>
+    }
+
+    <!-- Cart Content -->
+    @if (!isLoading && !errorMessage) {
+      @if (cartItems.length === 0) {
+        <!-- Empty Cart -->
+        <div class="text-center py-5">
+          <i class="bi bi-cart3 d-block mb-3" style="font-size: 4rem; color: #555;"></i>
+          <h5 class="text-light mb-2">Your cart is empty</h5>
+          <p class="text-muted mb-4">Looks like you haven't added any items yet.</p>
+          <a routerLink="/products" class="btn px-4 py-2 fw-semibold rounded-3" style="background-color: #1DB954; color: #121212;">
+            <i class="bi bi-bag me-1"></i> Start Shopping
+          </a>
+        </div>
+      } @else {
+        <div class="row g-4">
+          <!-- Cart Items -->
+          <div class="col-lg-8">
+            @for (item of cartItems; track getProductId(item)) {
+              <div class="card bg-dark border-0 rounded-4 mb-3 cart-item-card" style="--bs-bg-opacity: 0.5;" [class.opacity-50]="isItemUpdating(item)">
+                <div class="card-body d-flex align-items-center gap-3 p-3">
+                  <!-- Product Image -->
+                  <img class="rounded-3 flex-shrink-0" style="width: 120px; height: 100px; object-fit: cover;" [src]="getProductImage(item)" [alt]="getProductName(item)">
+
+                  <!-- Product Info -->
+                  <div class="flex-grow-1 min-width-0">
+                    <h6 class="fw-semibold text-light mb-1 text-truncate">{{ getProductName(item) }}</h6>
+                    <p class="fw-bold mb-2" style="color: #1DB954;">
+                      ${{ getProductPrice(item).toFixed(2) }}
+                    </p>
+
+                    <!-- Quantity Controls -->
+                    <div class="d-flex align-items-center gap-0">
+                      <button class="btn btn-sm border-0 rounded-start-3 px-3 py-1 fw-bold qty-btn" style="background-color: #2a2a2a; color: #b3b3b3;" (click)="decrementQuantity(item)" [disabled]="isItemUpdating(item)">
+                        −
+                      </button>
+                      <span class="px-3 py-1 fw-semibold text-light d-inline-block text-center small" style="background-color: #1e1e1e; min-width: 40px;">
+                        {{ item.quantity }}
+                      </span>
+                      <button class="btn btn-sm border-0 rounded-end-3 px-3 py-1 fw-bold qty-btn" style="background-color: #2a2a2a; color: #b3b3b3;" (click)="incrementQuantity(item)" [disabled]="isItemUpdating(item)">
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Item Total + Delete -->
+                  <div class="d-flex flex-column align-items-end gap-2 flex-shrink-0">
+                    <button class="btn btn-sm border-0 rounded-3 px-2 py-1 delete-btn" style="color: #ff5252;" (click)="removeItem(item)" [disabled]="isItemUpdating(item)" aria-label="Remove item">
+                      <i class="bi bi-trash3-fill"></i>
+                    </button>
+                    <span class="fw-bold text-light small">
+                      ${{ (getProductPrice(item) * item.quantity).toFixed(2) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Order Summary -->
+          <div class="col-lg-4">
+            <div class="card bg-dark border-0 rounded-4 sticky-top" style="--bs-bg-opacity: 0.5; top: 1.5rem;">
+              <div class="card-body p-4">
+                <h5 class="fw-bold text-light mb-3">Order Summary</h5>
+
+                <div class="d-flex justify-content-between mb-2">
+                  <span class="text-muted">Subtotal</span>
+                  <span class="fw-semibold" style="color: #1DB954;">${{ subtotal.toFixed(2) }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                  <span class="text-muted">Shipping</span>
+                  <span class="fw-semibold" style="color: #1DB954;">Free</span>
+                </div>
+
+                <hr style="border-color: #333;">
+
+                <div class="d-flex justify-content-between mb-4">
+                  <span class="fw-bold text-light">Total</span>
+                  <span class="fw-bold fs-5 text-light">${{ subtotal.toFixed(2) }}</span>
+                </div>
+
+                <a routerLink="/checkout" class="btn d-block w-100 py-2 fw-semibold rounded-3 fs-6" style="background-color: #1DB954; color: #121212;">
+                  Checkout
+                </a>
+
+                <p class="text-center text-muted small mt-2 mb-0">
+                  or <a routerLink="/products" class="text-decoration-none" style="color: #1DB954;">continue shopping</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    }
   </div>
 </div>

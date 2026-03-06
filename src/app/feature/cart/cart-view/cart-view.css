@@ -1,0 +1,36 @@
+.app-wrapper {
+  background-color: #121212;
+  min-height: 100vh;
+  color: #ffffff;
+}
+
+.cart-item-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cart-item-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.qty-btn {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.qty-btn:hover:not(:disabled) {
+  background-color: #1DB954 !important;
+  color: #121212 !important;
+}
+
+.delete-btn {
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background-color: rgba(255, 82, 82, 0.15) !important;
+  color: #ff1744 !important;
+}
+
+.min-width-0 {
+  min-width: 0;
+}
