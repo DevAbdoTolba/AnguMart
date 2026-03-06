@@ -1,1 +1,104 @@
-<p>signup works!</p>
+<div class="container d-flex align-items-center justify-content-center min-vh-100 bg-dark">
+  <div class="card bg-dark text-white border-secondary p-4 shadow-lg" style="max-width: 450px; width: 100%;">
+    <h2 class="text-center fw-bold mb-4" style="color: #1DB954;">Create Account</h2>
+
+    @if (errorMessage) {
+      <div class="alert alert-danger py-2 small text-center mb-3">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="alert alert-success py-2 small text-center mb-3">
+        <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
+      </div>
+    }
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      
+      <div class="mb-3">
+        <label class="form-label small fw-bold">Full Name</label>
+        <input type="text" formControlName="fullName" placeholder="Enter your full name"
+               class="form-control bg-dark text-white border-secondary"
+               [class.is-invalid]="signupForm.get('fullName')?.touched && signupForm.get('fullName')?.invalid">
+        @if (signupForm.get('fullName')?.touched && signupForm.get('fullName')?.invalid) {
+          <div class="invalid-feedback">Full name is required (3-60 characters).</div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small fw-bold">Email</label>
+        <input type="email" formControlName="email" placeholder="name@example.com"
+               class="form-control bg-dark text-white border-secondary"
+               [class.is-invalid]="signupForm.get('email')?.touched && signupForm.get('email')?.invalid">
+        @if (signupForm.get('email')?.touched && signupForm.get('email')?.invalid) {
+          <div class="invalid-feedback">Please enter a valid email address.</div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small fw-bold">Phone Number</label>
+        <input type="tel" formControlName="phone" placeholder="e.g. 01012345678"
+               class="form-control bg-dark text-white border-secondary"
+               [class.is-invalid]="signupForm.get('phone')?.touched && signupForm.get('phone')?.invalid">
+        @if (signupForm.get('phone')?.touched && signupForm.get('phone')?.invalid) {
+          <div class="invalid-feedback">Enter a valid 11-digit Egyptian number.</div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small fw-bold">Password</label>
+        <div class="input-group">
+          <input [type]="showPassword ? 'text' : 'password'" 
+                 formControlName="password" placeholder="Min 8 chars, 1 Upper, 1 Special"
+                 class="form-control bg-dark text-white border-secondary"
+                 [class.is-invalid]="signupForm.get('password')?.touched && signupForm.get('password')?.invalid">
+          <button type="button" (click)="togglePassword()" class="btn btn-outline-secondary">
+            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+        @if (signupForm.get('password')?.touched && signupForm.get('password')?.invalid) {
+          <div class="text-danger mt-1" style="font-size: 0.75rem;">
+            Must include uppercase, lowercase, number, and special character.
+          </div>
+        }
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label small fw-bold">Confirm Password</label>
+        <input type="password" formControlName="confirmPassword" placeholder="Confirm your password"
+               class="form-control bg-dark text-white border-secondary"
+               [class.is-invalid]="signupForm.get('confirmPassword')?.touched && (signupForm.hasError('passwordMismatch') || signupForm.get('confirmPassword')?.invalid)">
+        @if (signupForm.get('confirmPassword')?.touched) {
+          @if (signupForm.hasError('passwordMismatch')) {
+            <div class="text-danger small mt-1">Passwords do not match!</div>
+          }
+        }
+      </div>
+
+      <button type="submit" [disabled]="isLoading || signupForm.invalid" 
+              class="btn w-100 rounded-pill fw-bold py-2 text-dark" style="background-color: #1DB954;">
+        @if (isLoading) {
+          <span class="spinner-border spinner-border-sm me-2"></span>
+        }
+        Sign Up
+      </button>
+
+      <p class="text-center text-secondary small mt-3">
+        By signing up, you agree to our 
+        <span style="color: #1DB954; cursor: pointer;">Terms</span> and 
+        <span style="color: #1DB954; cursor: pointer;">Privacy</span>.
+      </p>
+
+      <div class="d-flex align-items-center my-3 text-muted">
+        <hr class="flex-grow-1 border-secondary">
+        <span class="mx-2 small">or</span>
+        <hr class="flex-grow-1 border-secondary">
+      </div>
+
+      <p class="text-center text-secondary small">
+        Already have an account? 
+<a routerLink="/login" class="fw-bold text-decoration-none" style="color: #1DB954; cursor: pointer;">Log in</a>      </p>
+    </form>
+  </div>
+</div>
