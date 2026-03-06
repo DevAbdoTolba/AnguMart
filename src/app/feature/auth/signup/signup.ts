@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Auth } from '../../../core/services/auth/auth';
 
 @Component({
   selector: 'app-signup',
@@ -14,24 +15,18 @@ export class Signup {
   signupForm: FormGroup;
   isLoading: boolean = false;
   showPassword: boolean = false; 
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router,
+    private authService: Auth
+  ) {
     this.signupForm = this.fb.group({
-      fullName: ['', [
-        Validators.required, 
-        Validators.minLength(3), 
-        Validators.maxLength(60)
-      ]],
-      email: ['', [
-        Validators.required, 
-        Validators.email
-      ]],
-      phone: ['', [
-        Validators.required, 
-        Validators.pattern('^01[0125][0-9]{8}$'),
-        Validators.minLength(11), 
-        Validators.maxLength(11)
-      ]],
+      fullName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(60)]],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern('^01[0125][0-9]{8}$'), Validators.minLength(11), Validators.maxLength(11)]],
       password: ['', [
         Validators.required, 
         Validators.minLength(8), 
@@ -57,10 +52,27 @@ export class Signup {
   onSubmit() {
     if (this.signupForm.valid) {
       this.isLoading = true;
-      setTimeout(() => {
-        this.isLoading = false; 
-        this.router.navigate(['/login']);
-      }, 2000);
+      this.successMessage = null; 
+      this.errorMessage = null;
+
+      const signUpData = {
+        name: this.signupForm.value.fullName,
+        email: this.signupForm.value.email,
+        phone: this.signupForm.value.phone,
+        password: this.signupForm.value.password
+      };
+
+      this.authService.register(signUpData).subscribe({
+        next: (response: any) => {
+          this.isLoading = false;
+          this.successMessage = 'Registration successful! A confirmation email has been sent. Please check your inbox to verify your account.';       
+          this.signupForm.reset();
+        },
+        error: (err: any) => {
+          this.isLoading = false;
+          this.errorMessage = err.error?.message || 'Something went wrong, please try again.';
+        }
+      }); 
     } else {
       this.signupForm.markAllAsTouched(); 
     }
