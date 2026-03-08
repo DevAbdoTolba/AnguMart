@@ -9,7 +9,7 @@ import { CartService } from '../../../core/services/cart.service';
   selector: 'app-cart-view',
   imports: [CommonModule],
   templateUrl: './cart-view.html',
-  styleUrl: './cart-view.css',
+  styles: []
 })
 export class CartView implements OnInit {
   cartItems: CartItem[] = [];

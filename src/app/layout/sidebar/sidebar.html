@@ -1,0 +1,20 @@
+<aside class="flex-shrink-0" style="min-width: 240px;">
+  <div class="card rounded-4 p-4" style="background: #181818; border: 1px solid #333333; box-shadow: 0 1px 3px rgba(0,0,0,.4);">
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h6 class="fw-bold mb-0 text-white" style="font-size: 1rem;">{{ title() }}</h6>
+      @if (showClear()) {
+        <button
+          class="btn btn-sm p-0 border-0"
+          style="background: transparent; color: #b3b3b3; font-size: .8rem; font-weight: 600;"
+          (click)="onClear()"
+        >
+          {{ clearLabel() }}
+        </button>
+      }
+    </div>
+
+    <!-- Content projection slot -->
+    <ng-content />
+  </div>
+</aside>
