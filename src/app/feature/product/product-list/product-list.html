@@ -3,34 +3,67 @@
     <!-- Header -->
     <div class="d-flex align-items-center justify-content-between mb-4 mt-2">
       <h1 class="mb-0 h4 fw-bold">All Products</h1>
-      <span class="text-secondary small">Showing {{ startingIndex }}–{{ endingIndex }} of {{ totalProducts }}</span>
-    </div>
-
-    <!-- Product Grid -->
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
-      @for (product of paginatedProducts; track product.id) {
-        <div class="col">
-          <a href="#" class="card h-100 text-decoration-none text-reset bg-dark shadow-sm product-card-hover border-0 rounded-4 overflow-hidden" style="--bs-bg-opacity: 0.5;">
-            <img class="card-img-top rounded-0" style="height: 220px; object-fit: cover;" [src]="'https://picsum.photos/id/' + product.imageId + '/400/300'" [alt]="product.name">
-            <div class="card-body d-flex flex-column p-4">
-              <h5 class="card-title fs-6 fw-semibold mb-2 text-truncate text-light" [title]="product.name">{{ product.name }}</h5>
-              <div class="text-warning mb-2 fs-6 d-flex align-items-center gap-1">
-                {{ getStars(product.rating) }}
-                <span class="text-muted small ms-1">({{ product.reviewCount }})</span>
-              </div>
-              <p class="card-text fw-bold fs-5 mt-auto mb-0" style="color: #1DB954;">${{ product.price.toFixed(2) }}</p>
-            </div>
-          </a>
-        </div>
-      } @empty {
-        <div class="col-12 py-5 text-center text-muted">
-          <p>No products found.</p>
-        </div>
+      @if (!isLoading && !errorMessage) {
+        <span class="text-secondary small">Showing {{ startingIndex }}–{{ endingIndex }} of {{ totalProducts }}</span>
       }
     </div>
 
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
+        @for (i of [1,2,3,4,5,6,7,8]; track i) {
+          <div class="col">
+            <div class="card h-100 bg-dark border-0 rounded-4 overflow-hidden placeholder-glow" style="--bs-bg-opacity: 0.5;">
+              <div class="placeholder rounded-0" style="height: 220px; background-color: #2a2a2a;"></div>
+              <div class="card-body p-4">
+                <span class="placeholder col-8 mb-2 rounded" style="height: 1rem;"></span>
+                <span class="placeholder col-5 mb-2 rounded" style="height: 1rem;"></span>
+                <span class="placeholder col-4 rounded" style="height: 1.25rem;"></span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Error State -->
+    @if (errorMessage) {
+      <div class="text-center py-5">
+        <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-3 d-block"></i>
+        <p class="text-muted mb-3">{{ errorMessage }}</p>
+        <button class="btn btn-sm px-4 py-2 fw-semibold rounded-3" style="background-color: #1DB954; color: #121212;" (click)="loadProducts()">
+          <i class="bi bi-arrow-clockwise me-1"></i> Retry
+        </button>
+      </div>
+    }
+
+    <!-- Product Grid -->
+    @if (!isLoading && !errorMessage) {
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
+        @for (product of products; track product._id) {
+          <div class="col">
+            <a [routerLink]="['/products', product._id]" class="card h-100 text-decoration-none text-reset bg-dark shadow-sm product-card-hover border-0 rounded-4 overflow-hidden" style="--bs-bg-opacity: 0.5;">
+              <img class="card-img-top rounded-0" style="height: 220px; object-fit: cover;" [src]="'https://picsum.photos/seed/' + product._id + '/400/300'" [alt]="product.name">
+              <div class="card-body d-flex flex-column p-4">
+                <h5 class="card-title fs-6 fw-semibold mb-2 text-truncate text-light" [title]="product.name">{{ product.name }}</h5>
+                <div class="text-warning mb-2 fs-6 d-flex align-items-center gap-1">
+                  {{ getStars(product.ratingsAverage ?? 0) }}
+                  <span class="text-muted small ms-1">({{ product.ratingsAverage ?? 0 }})</span>
+                </div>
+                <p class="card-text fw-bold fs-5 mt-auto mb-0" style="color: #1DB954;">${{ product.price.toFixed(2) }}</p>
+              </div>
+            </a>
+          </div>
+        } @empty {
+          <div class="col-12 py-5 text-center text-muted">
+            <p>No products found.</p>
+          </div>
+        }
+      </div>
+    }
+
     <!-- Pagination -->
-    @if (totalPages > 1) {
+    @if (!isLoading && totalPages > 1) {
       <nav aria-label="Product pagination" class="d-flex justify-content-center mt-5 mb-3">
         <ul class="pagination gap-2">
           <li class="page-item" [class.disabled]="currentPage === 1">
