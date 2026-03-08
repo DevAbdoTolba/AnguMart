@@ -1,1 +1,63 @@
-<p>product-filter works!</p>
+<!-- Category Chips -->
+<div class="d-flex flex-wrap gap-2 pb-2 mb-3" style="overflow-x: auto;">
+  @for (chip of categoryChips; track chip.label) {
+    <span
+      class="d-inline-flex align-items-center"
+      style="padding: 6px 14px; border-radius: 500px; font-size: .85rem; font-weight: 500; cursor: pointer;"
+      [style.background]="chip.active ? 'rgba(29, 185, 84, .15)' : '#282828'"
+      [style.color]="chip.active ? '#1DB954' : '#b3b3b3'"
+      (click)="onChipClick(chip)"
+    >
+      {{ chip.label }}
+    </span>
+  }
+</div>
+
+<!-- Browse Layout -->
+<div class="d-flex gap-4" style="align-items: flex-start;">
+  <!-- Sidebar Filters -->
+  <app-sidebar
+    title="Filters"
+    clearLabel="Clear All"
+    [showClear]="true"
+    (clearClicked)="onClearAll()"
+  >
+    @for (group of filterGroups; track group.title; let last = $last) {
+      <div [class.mb-3]="!last">
+        <p
+          class="text-uppercase fw-semibold mb-2"
+          style="font-size: .85rem; color: #b3b3b3; letter-spacing: 0.5px;"
+        >
+          {{ group.title }}
+        </p>
+        @for (option of group.options; track option.label) {
+          <label
+            class="d-flex align-items-center gap-2 mb-0"
+            style="padding: 4px 0; font-size: .9rem; color: #b3b3b3; cursor: pointer;"
+          >
+            <input
+              type="checkbox"
+              style="appearance: none; width: 18px; height: 18px; border: 2px solid #404040; border-radius: 4px; cursor: pointer; flex-shrink: 0;"
+              [style.background]="option.checked ? '#1DB954' : 'transparent'"
+              [style.border-color]="option.checked ? '#1DB954' : '#404040'"
+              [checked]="option.checked"
+              (change)="option.checked = !option.checked; onFilterChange()"
+            />
+            {{ option.label }}
+          </label>
+        }
+      </div>
+    }
+  </app-sidebar>
+
+  <!-- Product Grid Area -->
+  <div class="flex-grow-1">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h1 class="mb-0" style="font-size: 1.25rem; font-weight: 700;">All Products</h1>
+      <span style="font-size: .875rem; color: #b3b3b3;">Showing 1–12 of 128</span>
+    </div>
+
+    <!-- Product grid content projected from parent -->
+    <ng-content />
+  </div>
+</div>
