@@ -1,18 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { Product, ProductQueryParams } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
+import { Navbar } from '../../../layout/navbar/navbar';
+
 @Component({
   selector: 'app-product-list',
-  imports: [RouterLink],
+  imports: [RouterLink, Navbar],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
 })
-export class ProductList implements OnInit {
+export class ProductList implements OnInit, OnDestroy {
   products: Product[] = [];
   isLoading = true;
   errorMessage = '';
+
+  // Search
+  searchTerm = '';
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
 
   // Pagination
   currentPage = 1;
@@ -26,7 +34,23 @@ export class ProductList implements OnInit {
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
+    this.searchSubscription = this.searchSubject
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe((term) => {
+        this.searchTerm = term;
+        this.currentPage = 1;
+        this.loadProducts();
+      });
+
     this.loadProducts();
+  }
+
+  ngOnDestroy(): void {
+    this.searchSubscription?.unsubscribe();
+  }
+
+  onSearchChanged(term: string): void {
+    this.searchSubject.next(term);
   }
 
   loadProducts(): void {
@@ -54,9 +78,14 @@ export class ProductList implements OnInit {
     });
   }
 
+  get filteredProducts(): Product[] {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) return this.products;
+    return this.products.filter(p => p.name.toLowerCase().includes(term));
+  }
+
   get totalProducts(): number {
     if (this.totalPages === 0) return 0;
-    // On the last page we know exact remaining count
     if (this.currentPage === this.totalPages) {
       return (this.totalPages - 1) * this.pageSize + this.resultsCount;
     }

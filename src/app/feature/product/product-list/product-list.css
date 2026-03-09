@@ -4,6 +4,7 @@
   color: #ffffff;
 }
 
+/* Product card hover effect */
 .product-card-hover {
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
@@ -11,4 +12,42 @@
 .product-card-hover:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important;
+}
+
+/* Navbar link items */
+.nav-link-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #b3b3b3;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.nav-link-item:hover {
+  color: #ffffff;
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.empty-state-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(29, 185, 84, 0.15);
+  color: #1DB954;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
 }
