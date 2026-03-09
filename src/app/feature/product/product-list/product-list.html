@@ -66,19 +66,29 @@
             </a>
           </div>
         } @empty {
-          <!-- Friendly "No items found" -->
-          <div class="col-12 empty-state">
-            <div class="empty-state-icon">
-              <i class="bi bi-search"></i>
+          @if (showSearchLoading) {
+            <!-- Waiting for API to confirm -->
+            <div class="col-12 text-center py-5">
+              <div class="spinner-border text-success mb-3" role="status">
+                <span class="visually-hidden">Searching...</span>
+              </div>
+              <p class="text-muted">Searching for "<span class="text-light fw-semibold">{{ searchTerm }}</span>"...</p>
             </div>
-            <h5 class="fw-bold text-light mb-2">Oops, no items found!</h5>
-            @if (searchTerm) {
-              <p class="text-muted mb-0">We couldn't find anything matching "<span class="text-light fw-semibold">{{ searchTerm }}</span>".</p>
-              <p class="text-muted">Try a different search term or browse all products.</p>
-            } @else {
-              <p class="text-muted">No products are available at the moment.</p>
-            }
-          </div>
+          } @else {
+            <!-- Confirmed: no items -->
+            <div class="col-12 empty-state">
+              <div class="empty-state-icon">
+                <i class="bi bi-search"></i>
+              </div>
+              <h5 class="fw-bold text-light mb-2">Oops, no items found!</h5>
+              @if (searchTerm) {
+                <p class="text-muted mb-0">We couldn't find anything matching "<span class="text-light fw-semibold">{{ searchTerm }}</span>".</p>
+                <p class="text-muted">Try a different search term or browse all products.</p>
+              } @else {
+                <p class="text-muted">No products are available at the moment.</p>
+              }
+            </div>
+          }
         }
       </div>
     }
