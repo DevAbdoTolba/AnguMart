@@ -3,16 +3,6 @@ import { RouterLink } from '@angular/router';
 
 import { Product, ProductQueryParams } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
-
-export interface Product {
-  id: number;
-  name: string;
-  rating: number;
-  reviewCount: number;
-  price: number;
-  imageId: number;
-}
-
 @Component({
   selector: 'app-product-list',
   imports: [RouterLink],
