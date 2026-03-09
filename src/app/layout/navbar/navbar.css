@@ -1,0 +1,74 @@
+/* Navbar — matches AnguMart design system (Spotify dark) */
+.navbar-wrapper {
+  background: #181818;
+  border-bottom: 1px solid #333333;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1DB954;
+  letter-spacing: -0.5px;
+  text-decoration: none;
+}
+
+.navbar-brand:hover {
+  color: #1ed760;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Search bar */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #282828;
+  border-radius: 500px;
+  padding: 10px 20px;
+  max-width: 480px;
+  width: 100%;
+  transition: border-color 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.search-bar:focus-within {
+  border-color: #1DB954;
+}
+
+.search-bar-icon {
+  color: #727272;
+  font-size: 0.9rem;
+}
+
+.search-bar input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.search-bar input::placeholder {
+  color: #727272;
+}

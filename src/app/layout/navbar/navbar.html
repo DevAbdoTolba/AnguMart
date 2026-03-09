@@ -1,0 +1,22 @@
+<nav class="navbar-wrapper">
+  <div class="navbar-inner">
+    <!-- Brand -->
+    <a routerLink="/" class="navbar-brand">{{ brandName() }}</a>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <i class="bi bi-search search-bar-icon"></i>
+      <input
+        type="text"
+        [placeholder]="searchPlaceholder()"
+        [value]="searchValue()"
+        (input)="onSearchInput($event)"
+      />
+    </div>
+
+    <!-- Right-side links (content projection) -->
+    <div class="navbar-links">
+      <ng-content />
+    </div>
+  </div>
+</nav>
