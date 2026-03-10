@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
+import { WishlistService } from '../../../core/services/wishlist.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -21,13 +22,21 @@ export class ProductDetail implements OnInit {
   cartMessage = '';
   cartMessageType: 'success' | 'error' = 'success';
 
+  // Wishlist Optimistic State
+  isInWishlist = false;
+  isWishlistLoading = false;
+  wishlistMessage = '';
+  wishlistMessageType: 'success' | 'error' = 'success';
+  private wishlistSub!: import('rxjs').Subscription;
+
   quantity = 1;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private wishlistService: WishlistService
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +47,17 @@ export class ProductDetail implements OnInit {
       this.errorMessage = 'Product not found.';
       this.isLoading = false;
     }
+
+    // Subscribe to the global wishlist state so it updates instantly
+    this.wishlistSub = this.wishlistService.wishlistIds$.subscribe(ids => {
+      this.isInWishlist = this.product ? ids.has(this.product._id) : false;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.wishlistSub) {
+      this.wishlistSub.unsubscribe();
+    }
   }
 
   loadProduct(id: string): void {
@@ -47,6 +67,10 @@ export class ProductDetail implements OnInit {
     this.productService.getProductById(id).subscribe({
       next: (response) => {
         this.product = response.data.data;
+        // Check initial wishlist presence upon load
+        this.wishlistService.wishlistIds$.subscribe(ids => {
+           if(this.product) this.isInWishlist = ids.has(this.product._id);
+        }).unsubscribe(); // Check once immediately
         this.isLoading = false;
       },
       error: (err) => {
@@ -75,6 +99,41 @@ export class ProductDetail implements OnInit {
         this.cartMessage = err.error?.message || 'Could not add to cart. Please try again.';
         this.cartMessageType = 'error';
         this.addingToCart = false;
+      },
+    });
+  }
+
+  toggleWishlist(): void {
+    if (!this.product || this.isWishlistLoading) return;
+
+    this.isWishlistLoading = true;
+    this.wishlistMessage = '';
+
+    const willBeAdded = !this.isInWishlist;
+    
+    // 1. Optimistically switch the UI INSTANTLY
+    this.wishlistService.setOptimisticState(this.product._id, willBeAdded);
+
+    // 2. Perform the matching backend operation
+    const request = willBeAdded 
+      ? this.wishlistService.addToWishlist(this.product._id)
+      : this.wishlistService.removeFromWishlist(this.product._id);
+
+    // 3. Confirm or Revert the change
+    request.subscribe({
+      next: () => {
+        this.wishlistMessage = willBeAdded ? 'Added to wishlist!' : 'Removed from wishlist.';
+        this.wishlistMessageType = 'success';
+        this.isWishlistLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to update wishlist:', err);
+        this.wishlistMessage = err.error?.message || 'Could not update wishlist. Reverting change...';
+        this.wishlistMessageType = 'error';
+        
+        // Revert optimistically back to the original state
+        this.wishlistService.setOptimisticState(this.product!._id, !willBeAdded);
+        this.isWishlistLoading = false;
       },
     });
   }
