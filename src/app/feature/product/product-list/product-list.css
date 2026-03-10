@@ -14,21 +14,6 @@
   box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important;
 }
 
-/* Navbar link items */
-.nav-link-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #b3b3b3;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: color 0.2s ease;
-}
-
-.nav-link-item:hover {
-  color: #ffffff;
-}
 
 /* Empty state */
 .empty-state {

@@ -1,0 +1,108 @@
+<app-navbar>
+  <a routerLink="/wishlist" class="d-flex align-items-center gap-2 text-decoration-none text-success fw-semibold">
+    <i class="bi bi-heart-fill"></i>
+    <span>Wishlist</span>
+  </a>
+  <a routerLink="/cart" class="d-flex align-items-center gap-2 text-decoration-none text-secondary fw-semibold">
+    <i class="bi bi-cart3"></i>
+    <span>Cart</span>
+  </a>
+</app-navbar>
+
+<div class="app-wrapper py-5">
+  <div class="container">
+    <div class="mb-4">
+      <h2 class="fw-bold mb-1">Your Wishlist</h2>
+      <p class="text-body-secondary">Save items you love and move them to your cart later.</p>
+    </div>
+
+    <!-- Error State -->
+    @if (errorMessage) {
+      <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 placeholder-glow">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <div class="col">
+            <div class="card h-100 placeholder rounded-4" style="min-height: 250px; background-color: #2a2a2a; border-color: #333;"></div>
+          </div>
+        }
+      </div>
+    } 
+
+    @if (!isLoading && !errorMessage) {
+      
+      <!-- Empty State -->
+      @if (wishlistItems.length === 0) {
+        <div class="text-center py-5 my-5">
+          <div class="d-inline-flex justify-content-center align-items-center rounded-circle bg-dark mb-4" style="width: 100px; height: 100px; box-shadow: 0 0 0 10px rgba(29, 185, 84, 0.1);">
+            <i class="bi bi-heart fs-1" style="color: #1DB954;"></i>
+          </div>
+          <h3 class="fw-bold mb-2">It's a little empty here</h3>
+          <p class="text-secondary mb-4">Start starring items to add them to your wishlist.</p>
+          <button class="btn btn-success fw-bold rounded-pill px-4" routerLink="/products">
+            Explore Products
+          </button>
+        </div>
+      }
+      
+      <!-- Loaded Items State -->
+      @if (wishlistItems.length > 0) {
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+          @for (item of wishlistItems; track item._id) {
+            <div class="col">
+              <div class="card h-100 wishlist-card rounded-4 p-3 position-relative d-flex flex-column h-100 shadow-sm border">
+                
+                <!-- Remove Button overlaying Image -->
+                <button 
+                  class="btn btn-dark rounded-circle position-absolute" 
+                  style="top: 20px; right: 20px; width: 36px; height: 36px; padding: 0; z-index: 10;"
+                  (click)="removeFromWishlist(item._id)"
+                  [disabled]="loadingProductIds.has(item._id)"
+                >
+                  <i class="bi bi-x-lg small text-secondary"></i>
+                </button>
+
+                <img 
+                  [src]="'https://picsum.photos/seed/' + item._id + '/300/300'" 
+                  [alt]="item.name"
+                  class="card-img-top rounded-3 object-fit-cover mb-3" 
+                  height="180" 
+                />
+
+                <div class="card-body p-0 d-flex flex-column flex-grow-1">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title fw-semibold text-truncate mb-0" [title]="item.name">
+                      <a [routerLink]="['/products', item._id]" class="text-decoration-none text-light stretched-link">
+                        {{ item.name }}
+                      </a>
+                    </h5>
+                  </div>
+                  
+                  <p class="fs-6 fw-bold text-success mb-3 mt-auto">{{ item.price | currency }}</p>
+
+                  <button 
+                    class="btn btn-success rounded-pill fw-semibold border-0 w-100 position-relative z-2"
+                    (click)="moveToCart(item)"
+                    [disabled]="loadingProductIds.has(item._id)"
+                  >
+                    @if (loadingProductIds.has(item._id)) {
+                      <span class="spinner-border spinner-border-sm me-1"></span> Moving...
+                    } @else {
+                      <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                    }
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>
