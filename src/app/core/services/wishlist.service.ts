@@ -22,32 +22,20 @@ export class WishlistService {
   private wishlistIdsSubject = new BehaviorSubject<Set<string>>(new Set());
   wishlistIds$ = this.wishlistIdsSubject.asObservable();
 
-  constructor() {
-    this.extractWishlistFromToken();
-  }
-
-  /**
-   * Initializes the wishlist instantly by decoding the JWT token in localStorage.
-   * This completely avoids doing an expensive `GET /api/wishlist` on page load!
-   */
-  private extractWishlistFromToken(): void {
-    const token = localStorage.getItem('angumart_token');
-    if (token) {
-      try {
-        const payloadStr = token.split('.')[1];
-        const decoded = JSON.parse(atob(payloadStr));
-        
-        const wishlistArray = decoded?.data?.wishlist || [];
-        // The array might contain plain objects or plain strings representing IDs
-        const ids = wishlistArray.map((item: any) => 
-          typeof item === 'string' ? item : item._id
+  getWishlist(): Observable<WishlistResponse> {
+    return this.http.get<WishlistResponse>(this.apiUrl).pipe(
+      tap((res) => {
+        // The backend `GET /api/wishlist` wraps populated products inside of `productId`.
+        // e.g., [{ _id: "wishlist1", productId: { _id: "realProductId", name: "..."} }]
+        const ids = new Set<string>(
+          res.data.data.map((item: any) => 
+            // Handle both populated objects or flat raw keys just in case
+            item.productId && item.productId._id ? item.productId._id : item.productId
+          )
         );
-        
-        this.wishlistIdsSubject.next(new Set<string>(ids));
-      } catch (err) {
-        console.error('Failed to parse wishlist state from JWT token', err);
-      }
-    }
+        this.wishlistIdsSubject.next(ids);
+      })
+    );
   }
 
   addToWishlist(productId: string): Observable<any> {
