@@ -1,33 +1,35 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-import { ProductDetailResponse, ProductListResponse, ProductQueryParams } from '../models/product.model';
+export interface Product {
+  _id?: string;
+  name: string;
+  price: number;
+  stock: number;
+  category: any;
+  description?: string;
+  image: string;
+}
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ProductService {
-  private readonly apiUrl = `${environment.apiUrl}/products`;
+  private http = inject(HttpClient);
+  private readonly API_URL = 'http://localhost:3000/api/products';
 
-  constructor(private http: HttpClient) {}
-
-  getProducts(queryParams?: ProductQueryParams): Observable<ProductListResponse> {
-    let params = new HttpParams();
-
-    if (queryParams) {
-      Object.entries(queryParams).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
-          params = params.set(key, String(value));
-        }
-      });
-    }
-
-    return this.http.get<ProductListResponse>(this.apiUrl, { params });
+  getAllProducts(): Observable<any> {
+    return this.http.get<any>(this.API_URL);
   }
 
-  getProductById(id: string): Observable<ProductDetailResponse> {
-    return this.http.get<ProductDetailResponse>(`${this.apiUrl}/${id}`);
+  createProduct(product: any): Observable<any> {
+    return this.http.post(this.API_URL, product);
+  }
+
+  updateProduct(id: string, product: any): Observable<any> {
+    return this.http.patch(`${this.API_URL}/${id}`, product);
+  }
+
+  deleteProduct(id: string): Observable<any> {
+    return this.http.delete(`${this.API_URL}/${id}`);
   }
 }

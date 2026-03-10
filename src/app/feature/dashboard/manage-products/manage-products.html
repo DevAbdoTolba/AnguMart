@@ -1,1 +1,162 @@
-<p>manage-products works!</p>
+<div class="container-fluid py-4 manage-products-page">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-white fw-bold">Manage Products</h2>
+    <button class="btn btn-add-product" (click)="resetForm()">+ Add New Product</button>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger border-0 shadow-sm mb-4 d-flex align-items-center justify-content-between animate__animated animate__fadeIn">
+    <div>
+      <i class="bi bi-exclamation-octagon-fill me-2"></i>
+      <strong>Error:</strong> {{ errorMessage }}
+    </div>
+    <button type="button" class="btn-close btn-close-white" (click)="errorMessage = null"></button>
+  </div>
+
+  <div class="card bg-dark-card border-0 shadow-sm mb-4">
+    <div class="card-body p-4">
+      <h5 class="text-success mb-4">{{ isEditMode ? 'Edit Existing Product' : 'Add New Inventory Item' }}</h5>
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="row g-3">
+          
+          <div class="col-md-6">
+            <label class="form-label text-light">Product Name</label>
+            <input type="text" class="form-control bg-dark-input text-white border-0" formControlName="name" placeholder="Enter product name">
+            <div *ngIf="productForm.get('name')?.invalid && (productForm.get('name')?.dirty || productForm.get('name')?.touched)" class="text-danger small mt-1">
+              <span *ngIf="productForm.get('name')?.errors?.['required']">Product name is required.</span>
+              <span *ngIf="productForm.get('name')?.errors?.['minlength']">Minimum 3 characters required.</span>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label text-light">Category ID</label>
+            <input type="text" class="form-control bg-dark-input text-white border-0" formControlName="category" placeholder="Paste Category ID">
+            <div *ngIf="productForm.get('category')?.invalid && (productForm.get('category')?.dirty || productForm.get('category')?.touched)" class="text-danger small mt-1">
+              <span *ngIf="productForm.get('category')?.errors?.['required']">Category ID is required to link the product.</span>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label text-light">Price ($)</label>
+            <input type="number" class="form-control bg-dark-input text-white border-0" formControlName="price">
+            <div *ngIf="productForm.get('price')?.invalid && (productForm.get('price')?.dirty || productForm.get('price')?.touched)" class="text-danger small mt-1">
+              <span *ngIf="productForm.get('price')?.errors?.['required']">Price is required.</span>
+              <span *ngIf="productForm.get('price')?.errors?.['min']">Price must be at least 1.</span>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label text-light">Stock Amount</label>
+            <input type="number" class="form-control bg-dark-input text-white border-0" formControlName="stock">
+            <div *ngIf="productForm.get('stock')?.invalid && (productForm.get('stock')?.dirty || productForm.get('stock')?.touched)" class="text-danger small mt-1">
+              <span *ngIf="productForm.get('stock')?.errors?.['required']">Stock quantity is required.</span>
+              <span *ngIf="productForm.get('stock')?.errors?.['min']">Stock cannot be negative.</span>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label text-light">Product Image</label>
+            <div class="image-upload-wrapper border border-secondary border-dashed rounded p-4 text-center bg-dark" 
+                 [class.border-success]="productForm.get('image')?.value"
+                 [class.border-danger]="(productForm.get('image')?.invalid && productForm.get('image')?.touched) || productForm.get('image')?.errors?.['fileTooLarge']">
+              <input type="file" id="fileInput" class="d-none" (change)="onFileSelected($event)" accept="image/*">
+              <label for="fileInput" class="w-100" style="cursor: pointer;">
+                <div class="upload-icon mb-2">
+                  <img src="https://img.icons8.com/color/96/folder-invoices.png" alt="folder icon" width="50">
+                </div>
+                <p class="text-secondary mb-1 small">
+                  {{ productForm.get('image')?.value ? 'Image Ready ✓' : 'Click to browse an image (Max 1MB)' }}
+                </p>
+                <img *ngIf="productForm.get('image')?.value" [src]="productForm.get('image')?.value" class="mt-2 rounded shadow-sm" style="max-height: 80px;">
+                <input type="hidden" formControlName="image">
+              </label>
+            </div>
+            <div *ngIf="productForm.get('image')?.invalid && productForm.get('image')?.touched" class="text-danger small mt-1">
+               <span *ngIf="productForm.get('image')?.errors?.['required']">Product image is required.</span>
+               <span *ngIf="productForm.get('image')?.errors?.['fileTooLarge']">Image is too large! Please select a file under 1MB.</span>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label text-light">Description</label>
+            <textarea class="form-control bg-dark-input text-white border-0" formControlName="description" rows="2" placeholder="Tell us more about the product..."></textarea>
+          </div>
+          
+          <div class="col-12 mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-success px-4 fw-bold" [disabled]="productForm.invalid">
+              <i class="bi" [ngClass]="isEditMode ? 'bi-check-circle' : 'bi-plus-circle'"></i>
+              {{ isEditMode ? 'Update Product' : 'Save Product' }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary px-4" (click)="resetForm()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card bg-dark-card border-0 shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle mb-0">
+        <thead class="bg-darker">
+          <tr>
+            <th class="ps-4">PRODUCT</th>
+            <th>PRICE</th>
+            <th>STOCK</th>
+            <th>CATEGORY ID</th>
+            <th class="text-center">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of products" class="animate__animated animate__fadeIn">
+            <td class="ps-4">
+              <div class="d-flex align-items-center">
+                <img [src]="product.image || 'https://via.placeholder.com/40'" class="rounded-3 me-3 border border-secondary" width="40" height="40" alt="product">
+                <span class="fw-semibold text-white">{{ product.name }}</span>
+              </div>
+            </td>
+            <td class="text-light fw-bold">${{ product.price }}</td>
+            <td>
+              <span class="badge rounded-pill" [ngClass]="product.stock > 0 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
+                {{ product.stock > 0 ? product.stock + ' in stock' : 'Out of Stock' }}
+              </span>
+            </td>
+            <td>
+              <code class="text-info small">{{ product.category?._id || product.category }}</code>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-info me-2" (click)="editProduct(product)">
+                <i class="bi bi-pencil"></i> Edit
+              </button>
+              <button class="btn btn-sm btn-outline-danger" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#deleteConfirmModal"
+                      (click)="prepareDelete(product._id!)">
+                <i class="bi bi-trash"></i> Delete
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="products.length === 0">
+            <td colspan="5" class="text-center py-5 text-muted small">No products available in the inventory.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark border-secondary shadow-lg">
+        <div class="modal-body p-4 text-center">
+          <div class="mb-3">
+            <i class="bi bi-trash3-fill text-danger" style="font-size: 3rem;"></i>
+          </div>
+          <h4 class="text-white fw-bold mb-2">Are you sure?</h4>
+          <p class="text-secondary">Do you really want to delete this product? This action cannot be undone.</p>
+          <div class="d-flex justify-content-center gap-2 mt-4">
+            <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger px-4 fw-bold" (click)="confirmDelete()" data-bs-dismiss="modal">Yes, Delete It</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
