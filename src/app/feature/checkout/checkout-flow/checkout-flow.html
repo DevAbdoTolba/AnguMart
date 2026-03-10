@@ -1,1 +1,142 @@
-<p>checkout-flow works!</p>
+<div class="checkout-page">
+  <div class="container py-4 py-lg-5">
+    <h1 class="section-heading">Checkout</h1>
+
+    <div class="checkout-layout">
+      <div class="checkout-main">
+        <section class="card card-bordered">
+          <div class="section-header">
+            <h2>Shipping Address</h2>
+            @if (addressLoading()) {
+              <span class="status-pill">Loading</span>
+            }
+          </div>
+
+          @if (addressLoading()) {
+            <div class="skeleton-block"></div>
+            <div class="skeleton-block"></div>
+          } @else if (addressError()) {
+            <div class="state-block state-error">
+              <p>{{ addressError() }}</p>
+              <button class="btn btn-outline" type="button" (click)="retryAddresses()">Retry</button>
+            </div>
+          } @else if (addresses().length === 0) {
+            <div class="state-block state-empty">
+              <div class="state-icon">!</div>
+              <div>
+                <p class="state-title">No saved addresses</p>
+                <p class="state-subtitle">Add a shipping address in your profile to continue.</p>
+              </div>
+            </div>
+          } @else {
+            <div class="option-list">
+              @for (address of addresses(); track address.id) {
+                <button
+                  class="payment-option"
+                  type="button"
+                  [class.selected]="selectedAddressId() === address.id"
+                  (click)="selectAddress(address.id)"
+                >
+                  <span class="payment-option-radio"></span>
+                  <span>
+                    <span class="payment-option-label">{{ address.label }}</span>
+                    <span class="text-secondary text-sm">{{ address.details }}</span>
+                  </span>
+                </button>
+              }
+            </div>
+          }
+        </section>
+
+        <section class="card card-bordered">
+          <div class="section-header">
+            <h2>Payment Method</h2>
+            <span class="status-pill">Required</span>
+          </div>
+
+          <div class="option-list">
+            @for (method of paymentMethods; track method.id) {
+              <button
+                class="payment-option"
+                type="button"
+                [class.selected]="selectedPaymentId() === method.id"
+                (click)="selectPayment(method.id)"
+              >
+                <span class="payment-option-radio"></span>
+                <span>
+                  <span class="payment-option-label">{{ method.label }}</span>
+                  <span class="text-muted text-sm">{{ method.description }}</span>
+                </span>
+              </button>
+            }
+          </div>
+        </section>
+
+        @if (addressRequirementMessage()) {
+          <div class="state-block state-warning">
+            <div class="state-icon">!</div>
+            <p>{{ addressRequirementMessage() }}</p>
+          </div>
+        }
+
+        <button
+          class="btn btn-primary btn-full btn-lg"
+          type="button"
+          [disabled]="!canPlaceOrder()"
+          (click)="placeOrder()"
+        >
+          Place Order — {{ total() | currency: 'USD' }}
+        </button>
+        <p class="text-muted text-sm mt-2">Confirm your shipping and payment details before placing the order.</p>
+      </div>
+
+      <aside class="cart-summary">
+        <div class="summary-header">
+          <h3>Order Summary</h3>
+          @if (cartLoading()) {
+            <span class="status-pill">Updating</span>
+          }
+        </div>
+
+        @if (cartLoading()) {
+          <div class="summary-skeleton"></div>
+          <div class="summary-skeleton"></div>
+          <div class="summary-skeleton"></div>
+        } @else if (cartError()) {
+          <div class="state-block state-error">
+            <p>{{ cartError() }}</p>
+            <button class="btn btn-outline" type="button" (click)="retryCart()">Retry</button>
+          </div>
+        } @else if (cartItems().length === 0) {
+          <div class="state-block state-empty">
+            <div class="state-icon">!</div>
+            <div>
+              <p class="state-title">Cart is empty</p>
+              <p class="state-subtitle">Add at least one item to place an order.</p>
+            </div>
+          </div>
+        } @else {
+          <div class="summary-items">
+            @for (item of cartItems(); track item.id) {
+              <div class="summary-item">
+                <div class="summary-thumb" [style.background]="item.gradient"></div>
+                <div class="summary-details">
+                  <p class="text-sm font-medium">{{ item.name }}</p>
+                  <p class="text-xs text-muted">Qty: {{ item.qty }}</p>
+                </div>
+                <p class="text-sm font-semibold">{{ item.price * item.qty | currency: 'USD' }}</p>
+              </div>
+            }
+          </div>
+        }
+
+        <div class="summary-totals">
+          <div class="cart-summary-row"><span>Subtotal</span><span class="text-primary">{{ subtotal() | currency: 'USD' }}</span></div>
+          <div class="cart-summary-row"><span>Shipping</span><span class="text-accent">{{ shippingCost() === 0 ? 'Free' : (shippingCost() | currency: 'USD') }}</span></div>
+          <div class="cart-summary-row"><span>Tax (14%)</span><span class="text-primary">{{ taxAmount() | currency: 'USD' }}</span></div>
+          <div class="cart-summary-total"><span>Total</span><span>{{ total() | currency: 'USD' }}</span></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
