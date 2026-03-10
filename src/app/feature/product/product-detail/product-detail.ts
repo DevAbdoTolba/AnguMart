@@ -6,10 +6,11 @@ import { Product } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
+import { Navbar } from '../../../layout/navbar/navbar';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, Navbar],
   templateUrl: './product-detail.html',
   styles: [],
 })
@@ -52,6 +53,13 @@ export class ProductDetail implements OnInit {
     this.wishlistSub = this.wishlistService.wishlistIds$.subscribe(ids => {
       this.isInWishlist = this.product ? ids.has(this.product._id) : false;
     });
+
+    // Fetch fresh wishlist data from the server
+    if (localStorage.getItem('angumart_token')) {
+      this.wishlistService.getWishlist().subscribe({
+        error: (err) => console.log('Wishlist fetch error:', err)
+      });
+    }
   }
 
   ngOnDestroy(): void {
