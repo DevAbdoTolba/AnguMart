@@ -14,7 +14,7 @@ export const adminGuard: CanActivateFn = () => {
     // Decode the JWT payload (middle segment)
     const payload = JSON.parse(atob(token.split('.')[1]));
 
-    if (payload.role === 'admin') {
+    if (payload.data.role === 'admin') {
       return true;
     }
 
