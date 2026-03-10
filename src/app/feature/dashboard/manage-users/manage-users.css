@@ -1,0 +1,8 @@
+.custom-search-bg { background-color: #242424 !important; border-radius: 25px !important; }
+.avatar-circle { width: 35px; height: 35px; background: #1db954; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; }
+.role-pill { background: rgba(123, 97, 255, 0.1); color: #7b61ff; border: 1px solid rgba(123, 97, 255, 0.2); }
+.status-glow { padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+.status-glow.approved { color: #1db954; background: rgba(29, 185, 84, 0.1); }
+.status-glow.restricted { color: #f25c5c; background: rgba(242, 92, 92, 0.1); }
+.custom-pag .page-link { background: #242424; border: none; color: #888; margin: 0 4px; border-radius: 4px !important; }
+.custom-pag .page-item.active .page-link { background: #1db954 !important; color: #000 !important; }
