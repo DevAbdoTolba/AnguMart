@@ -34,9 +34,11 @@ interface CheckoutResponse {
   approvalUrl?: string;
 }
 
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-checkout-flow',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, RouterLink],
   templateUrl: './checkout-flow.html',
   styleUrl: './checkout-flow.css',
 })
