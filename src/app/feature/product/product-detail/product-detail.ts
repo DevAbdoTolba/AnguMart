@@ -7,10 +7,11 @@ import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { Navbar } from '../../../layout/navbar/navbar';
+import { ProductReview } from '../product-review/product-review';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [CommonModule, RouterLink, Navbar],
+  imports: [CommonModule, RouterLink, Navbar, ProductReview],
   templateUrl: './product-detail.html',
   styles: [],
 })

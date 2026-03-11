@@ -19,7 +19,11 @@
     <div class="d-flex align-items-center justify-content-between mb-4 mt-2">
       <h1 class="mb-0 h4 fw-bold">All Products</h1>
       @if (!isLoading && !errorMessage) {
-        <span class="text-secondary small">Showing {{ startingIndex }}–{{ endingIndex }} of {{ totalProducts }}</span>
+        @if (showTotalCount) {
+          <span class="text-secondary small">Showing {{ startingIndex }}–{{ endingIndex }} of {{ totalProducts }}</span>
+        } @else {
+          <span class="text-secondary small">Showing {{ startingIndex }}–{{ endingIndex }}</span>
+        }
       }
     </div>
 
