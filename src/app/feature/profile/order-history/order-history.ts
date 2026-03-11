@@ -156,8 +156,10 @@ export class OrderHistory {
     return order.items.reduce((sum, item) => sum + item.quantity, 0);
   }
 
-  protected getStatusClass(status: Order['status']): string {
+  protected getStatusClass(status: string): string {
     switch (status) {
+      case 'Completed':
+        return 'status-success';
       case 'Pending':
         return 'status-warning';
       case 'Shipped':
@@ -169,6 +171,13 @@ export class OrderHistory {
       default:
         return 'status-muted';
     }
+  }
+
+  protected getDisplayStatus(order: Order): string {
+    if (order.type === 'walletCharge') {
+      return 'Completed';
+    }
+    return order.status;
   }
 
   protected getPaymentMethod(order: Order): string {

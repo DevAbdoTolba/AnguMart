@@ -36,8 +36,8 @@
               </div>
               <p class="text-sm text-secondary">Placed on {{ selectedOrder()!.createdAt | date: 'MMM d, yyyy' }}</p>
             </div>
-            <span class="status" [class]="getStatusClass(selectedOrder()!.status)">
-              {{ selectedOrder()!.status }}
+            <span class="status" [class]="getStatusClass(getDisplayStatus(selectedOrder()!))">
+              {{ getDisplayStatus(selectedOrder()!) }}
             </span>
           </div>
 
@@ -141,7 +141,7 @@
                   <td>{{ getItemsCount(order) }} items</td>
                   <td class="font-semibold">{{ order.totalPrice | currency: 'USD' }}</td>
                   <td>
-                    <span class="status" [class]="getStatusClass(order.status)">{{ order.status }}</span>
+                    <span class="status" [class]="getStatusClass(getDisplayStatus(order))">{{ getDisplayStatus(order) }}</span>
                     @if (order.type === 'walletCharge') {
                       <span class="order-tag ms-2">Wallet Recharge</span>
                     }
