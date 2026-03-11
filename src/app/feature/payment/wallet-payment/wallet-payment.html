@@ -1,1 +1,98 @@
-<p>wallet-payment works!</p>
+<div class="wallet-page">
+  <div class="container py-4 py-lg-5">
+    @if (!successMessage()) {
+      <div class="row g-4 align-items-stretch">
+      <div class="col-12 col-lg-7">
+        <div class="wallet-card">
+          <div class="wallet-header">
+            <h1>Wallet Recharge</h1>
+            <span class="status-chip">Secure</span>
+          </div>
+          <p class="text-muted">Top up your wallet balance using PayPal. Your balance updates after approval.</p>
+
+          <div class="amount-field">
+            <label class="field-label" for="amount">Recharge Amount</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input
+                id="amount"
+                type="number"
+                min="1"
+                class="form-control"
+                placeholder="150"
+                [value]="amount()"
+                (input)="amount.set($any($event.target).value)"
+              />
+            </div>
+            @if (submitAttempted() && !isAmountValid()) {
+              <p class="field-error">Enter an amount greater than zero.</p>
+            }
+          </div>
+
+          <button
+            class="btn btn-primary w-100 mt-3"
+            type="button"
+            [disabled]="loading()"
+            (click)="submitRecharge()"
+          >
+            @if (loading()) {
+              Creating PayPal approval link...
+            } @else {
+              Recharge Wallet
+            }
+          </button>
+
+          @if (errorMessage()) {
+            <div class="state-block state-error mt-3">
+              <span class="state-icon">!</span>
+              <p>{{ errorMessage() }}</p>
+            </div>
+          }
+
+
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-5">
+        <div class="wallet-info">
+          <h2>How it works</h2>
+          <ul class="info-list">
+            <li>Enter the amount you want to add to your wallet.</li>
+            <li>We create a secure PayPal approval link for you.</li>
+            <li>Approve the payment, and your wallet balance updates automatically.</li>
+          </ul>
+          <div class="info-note">
+            Wallet balance updates are processed by the backend once PayPal approval is received.
+          </div>
+        </div>
+      </div>
+    </div>
+    } @else {
+      <div class="success-splash text-center py-5">
+        <div class="state-icon mx-auto mb-4" style="width: 100px; height: 100px; font-size: 3rem; border-radius: 50%; background: rgba(29, 185, 84, 0.1); color: #1db954;">✓</div>
+        <h2 class="mb-3" style="font-size: 2.5rem; font-weight: 700;">Wait, just one more step!</h2>
+        <p class="text-muted mb-4 mx-auto" style="max-width: 500px; font-size: 1.1rem;">
+          Your wallet charge request was created successfully.
+        </p>
+
+        <div class="paypal-action mt-5 mb-5 p-4 mx-auto" style="max-width: 500px; background: rgba(255, 202, 40, 0.08); border: 1px dashed rgba(255, 202, 40, 0.6); border-radius: 14px;">
+          <h4 class="text-warning mb-2" style="font-weight: 600;">Action Required</h4>
+          <p class="mb-4" style="color: rgba(255, 255, 255, 0.8);">Please complete your payment via PayPal to have the funds added to your balance.</p>
+          <a
+            class="btn btn-primary btn-full btn-lg w-100"
+            [href]="approvalUrl() ?? '#'"
+            [class.disabled]="!approvalUrl()"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Pay with PayPal
+          </a>
+        </div>
+        
+        <div class="mt-4">
+          <a routerLink="/" class="btn btn-outline btn-lg px-5">Continue Browsing</a>
+        </div>
+      </div>
+    }
+  </div>
+</div>

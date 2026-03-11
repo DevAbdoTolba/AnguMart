@@ -17,3 +17,12 @@
 .text-warning {
   font-size: 1.1rem;
 }
+
+.product-link-hover {
+  transition: color 0.2s ease;
+}
+
+.product-link-hover:hover {
+  color: #1DB954 !important; /* Bootstrap success color variation */
+  text-decoration: underline !important;
+}

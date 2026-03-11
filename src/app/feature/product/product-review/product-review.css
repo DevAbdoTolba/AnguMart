@@ -1,0 +1,8 @@
+.rating-selector i {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.rating-selector i:hover {
+  transform: scale(1.15);
+  color: #ffca28 !important; /* Emphasize warning star color */
+}

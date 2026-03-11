@@ -3,7 +3,11 @@
   [searchValue]="searchTerm"
   (searchChanged)="onSearchChanged($event)"
 >
-  <a routerLink="/cart" class="nav-link-item">
+  <a routerLink="/wishlist" class="d-flex align-items-center gap-2 text-decoration-none text-secondary fw-semibold">
+    <i class="bi bi-heart"></i>
+    <span>Wishlist</span>
+  </a>
+  <a routerLink="/cart" class="d-flex align-items-center gap-2 text-decoration-none text-secondary fw-semibold">
     <i class="bi bi-cart3"></i>
     <span>Cart</span>
   </a>
@@ -15,7 +19,11 @@
     <div class="d-flex align-items-center justify-content-between mb-4 mt-2">
       <h1 class="mb-0 h4 fw-bold">All Products</h1>
       @if (!isLoading && !errorMessage) {
-        <span class="text-secondary small">Showing {{ startingIndex }}–{{ endingIndex }} of {{ totalProducts }}</span>
+        @if (showTotalCount) {
+          <span class="text-secondary small">Showing {{ startingIndex }}–{{ endingIndex }} of {{ totalProducts }}</span>
+        } @else {
+          <span class="text-secondary small">Showing {{ startingIndex }}–{{ endingIndex }}</span>
+        }
       }
     </div>
 
