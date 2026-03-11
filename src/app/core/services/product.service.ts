@@ -1,6 +1,14 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
+// استيراد الموديلز اللي جات من برانش الـ Categories
+import { 
+  ProductDetailResponse, 
+  ProductListResponse, 
+  ProductQueryParams 
+} from '../models/product.model';
 
 export interface Product {
   _id?: string;
@@ -15,21 +23,42 @@ export interface Product {
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private http = inject(HttpClient);
-  private readonly API_URL = 'http://localhost:3000/api/products';
+  
+  // استخدمنا الـ environment عشان يبقى الكود احترافي
+  private readonly apiUrl = `${environment.apiUrl}/products`;
+  // دي الـ URL اللي بنستخدمها في الـ Admin Dashboard
+  private readonly adminApiUrl = 'http://localhost:3000/api/admin';
+
+  // ==========================================================
+  // 1. PRODUCT METHODS (CRUD & FETCHING)
+  // ==========================================================
 
   getAllProducts(): Observable<any> {
-    return this.http.get<any>(this.API_URL);
+    return this.http.get<any>(this.apiUrl);
+  }
+
+  // الميثود دي زيادة لزوم الـ Dashboard
+  getAdminProducts(): Observable<any> {
+    return this.http.get<any>(`${this.adminApiUrl}/products`);
   }
 
   createProduct(product: any): Observable<any> {
-    return this.http.post(this.API_URL, product);
+    return this.http.post(this.apiUrl, product);
   }
 
   updateProduct(id: string, product: any): Observable<any> {
-    return this.http.patch(`${this.API_URL}/${id}`, product);
+    return this.http.patch(`${this.apiUrl}/${id}`, product);
   }
 
   deleteProduct(id: string): Observable<any> {
-    return this.http.delete(`${this.API_URL}/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  // ==========================================================
+  // 2. DASHBOARD STATS
+  // ==========================================================
+  
+  getStats(): Observable<any> {
+    return this.http.get<any>(`${this.adminApiUrl}/stats`);
   }
 }

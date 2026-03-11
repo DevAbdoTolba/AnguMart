@@ -1,0 +1,31 @@
+.manage-categories-page {
+  background-color: #121212;
+  min-height: 100vh;
+}
+
+.bg-dark-card {
+  background-color: #1e1e1e !important;
+  border-radius: 12px;
+}
+
+.bg-dark-input {
+  background-color: #2a2a2a !important;
+}
+
+.bg-darker {
+  background-color: #181818;
+}
+
+.table {
+  --bs-table-bg: transparent;
+  border-color: #333;
+}
+
+.btn-success {
+  background-color: #00c853;
+  border: none;
+}
+
+.btn-danger {
+  background-color: #ff1744;
+}
