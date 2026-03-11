@@ -166,4 +166,4 @@ export class ManageReviews implements OnInit {
       toast.show();
     }
   }
-}
+}

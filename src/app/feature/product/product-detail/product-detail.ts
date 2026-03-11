@@ -74,7 +74,7 @@ export class ProductDetail implements OnInit {
     this.errorMessage = '';
 
     this.productService.getProductById(id).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.product = response.data.data;
         // Check initial wishlist presence upon load
         this.wishlistService.wishlistIds$.subscribe(ids => {
@@ -82,7 +82,7 @@ export class ProductDetail implements OnInit {
         }).unsubscribe(); // Check once immediately
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to load product:', err);
         this.errorMessage = 'Failed to load product details. Please try again.';
         this.isLoading = false;
@@ -103,7 +103,7 @@ export class ProductDetail implements OnInit {
         this.addingToCart = false;
         this.quantity = 1;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to add to cart:', err);
         this.cartMessage = err.error?.message || 'Could not add to cart. Please try again.';
         this.cartMessageType = 'error';
@@ -135,7 +135,7 @@ export class ProductDetail implements OnInit {
         this.wishlistMessageType = 'success';
         this.isWishlistLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to update wishlist:', err);
         this.wishlistMessage = err.error?.message || 'Could not update wishlist. Reverting change...';
         this.wishlistMessageType = 'error';

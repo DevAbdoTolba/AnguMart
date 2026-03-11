@@ -181,7 +181,7 @@ export class ProductList implements OnInit, OnDestroy {
     }
 
     this.productService.getProducts(params).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         const items = response.data?.data ?? [];
         const pageResults = items.length;
         const reportedResults = response.results ?? pageResults;
@@ -229,7 +229,7 @@ export class ProductList implements OnInit, OnDestroy {
           this.prefetchAdjacentPages();
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to load products:', err);
         this.errorMessage = 'Failed to load products. Please try again.';
         this.isLoading = false;
