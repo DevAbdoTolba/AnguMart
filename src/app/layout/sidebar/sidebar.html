@@ -1,20 +1,81 @@
-<aside class="flex-shrink-0" style="min-width: 240px;">
-  <div class="card rounded-4 p-4" style="background: #181818; border: 1px solid #333333; box-shadow: 0 1px 3px rgba(0,0,0,.4);">
-    <!-- Header -->
-    <div class="d-flex align-items-center justify-content-between mb-3">
-      <h6 class="fw-bold mb-0 text-white" style="font-size: 1rem;">{{ title() }}</h6>
-      @if (showClear()) {
-        <button
-          class="btn btn-sm p-0 border-0"
-          style="background: transparent; color: #b3b3b3; font-size: .8rem; font-weight: 600;"
-          (click)="onClear()"
-        >
-          {{ clearLabel() }}
-        </button>
-      }
-    </div>
+<aside class="d-flex flex-column flex-shrink-0 p-3 text-white" 
+       [style.width]="title() === 'Filters' ? '240px' : '260px'" 
+       [style.height]="title() === 'Filters' ? 'auto' : '100vh'"
+       [style.background-color]="title() === 'Filters' ? '#181818' : '#121212'">
 
-    <!-- Content projection slot -->
-    <ng-content />
+  <div class="d-flex align-items-center justify-content-between mb-3 ps-2">
+    <span [class]="title() === 'Filters' ? 'fw-bold text-white' : 'fs-4 fw-bold text-success'">
+      {{ title() }}
+    </span>
+    
+    @if (showClear() && title() === 'Filters') {
+      <button class="btn btn-sm p-0 border-0"
+              style="background: transparent; color: #b3b3b3; font-size: .8rem; font-weight: 600;"
+              (click)="onClear()">
+        {{ clearLabel() }}
+      </button>
+    }
   </div>
+
+  <hr class="border-secondary opacity-25">
+
+  @if (title() !== 'Filters') {
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item mb-1">
+        <a routerLink="/dashboard/stats" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}"
+           class="nav-link text-white d-flex align-items-center gap-3 py-2 px-3 rounded-0">
+          <i class="bi bi-grid-fill text-success"></i> <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item mb-1">
+        <a routerLink="/dashboard/users" routerLinkActive="active-link"
+           class="nav-link text-white d-flex align-items-center gap-3 py-2 px-3 rounded-0">
+          <i class="bi bi-people-fill" style="color: #6f42c1;"></i> <span>Users</span>
+        </a>
+      </li>
+      <li class="nav-item mb-1">
+        <a routerLink="/dashboard/products" routerLinkActive="active-link"
+           class="nav-link text-white d-flex align-items-center gap-3 py-2 px-3 rounded-0">
+          <i class="bi bi-box-seam-fill text-warning"></i> <span>Products</span>
+        </a>
+      </li>
+      <li class="nav-item mb-1">
+        <a routerLink="/dashboard/categories" routerLinkActive="active-link"
+           class="nav-link text-white d-flex align-items-center gap-3 py-2 px-3 rounded-0">
+          <i class="bi bi-tags-fill text-info"></i> <span>Categories</span>
+        </a>
+      </li>
+      <li class="nav-item mb-1">
+        <a routerLink="/dashboard/orders" routerLinkActive="active-link"
+           class="nav-link text-white d-flex align-items-center gap-3 py-2 px-3 rounded-0">
+          <i class="bi bi-file-earmark-text-fill text-primary"></i> <span>Orders</span>
+        </a>
+      </li>
+      <li class="nav-item mb-1">
+        <a routerLink="/dashboard/reviews" routerLinkActive="active-link"
+           class="nav-link text-white d-flex align-items-center gap-3 py-2 px-3 rounded-0">
+          <i class="bi bi-star-fill text-warning"></i> <span>Reviews</span>
+        </a>
+      </li>
+    </ul>
+
+    <hr class="border-secondary opacity-25">
+    <div class="d-flex align-items-center gap-2 px-2 pb-3 mt-auto">
+      <div class="bg-success rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm" 
+           style="width: 38px; height: 38px; font-size: 0.9rem;">
+        {{ adminName().substring(0, 1).toUpperCase() }}
+      </div>
+      <div class="overflow-hidden">
+        <p class="mb-0 small fw-bold text-white text-truncate">{{ adminName() }}</p>
+        <p class="mb-0 x-small text-secondary text-truncate" style="font-size: 0.75rem;">Super Admin</p>
+      </div>
+    </div>
+  } 
+  
+  @else {
+    <div class="filter-content">
+      <ng-content />
+    </div>
+  }
+
 </aside>
