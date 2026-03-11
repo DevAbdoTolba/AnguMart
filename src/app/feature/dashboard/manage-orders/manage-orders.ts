@@ -2,13 +2,14 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 
 declare var bootstrap: any;
 
 interface Order {
   _id: string;
   user: { name?: string; username?: string }; 
-  products: any[];
+  items: any[];
   totalPrice: number;
   status: 'Pending' | 'Shipped' | 'Delivered' | 'Cancelled';
 }
@@ -16,7 +17,7 @@ interface Order {
 @Component({
   selector: 'app-manage-orders',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './manage-orders.html',
   styleUrls: ['./manage-orders.css']
 })
@@ -30,6 +31,8 @@ export class ManageOrders implements OnInit {
   totalPages: number = 1;
   
   selectedOrderId: string | null = null;
+  selectedOrderItems: any[] = [];
+  selectedOrderTotal: number = 0;
 
   ngOnInit() {
     this.loadOrders();
@@ -54,6 +57,10 @@ export class ManageOrders implements OnInit {
       .set('page', this.currentPage.toString())
       .set('limit', '5');
 
+    if (this.currentFilter !== 'All') {
+      params = params.set('status', this.currentFilter);
+    }
+
     this.http.get<any>(`${this.apiUrl}/admin/all`, { params }).subscribe({
       next: (res) => {
         if (res && res.data && Array.isArray(res.data.data)) {
@@ -64,7 +71,6 @@ export class ManageOrders implements OnInit {
         } else {
           this.filteredOrders = [];
         }
-        this.applyClientFilter();
       },
       error: (err) => {
         console.error('Error fetching orders:', err);
@@ -94,43 +100,69 @@ export class ManageOrders implements OnInit {
     }
   }
 
- confirmCancel() {
-  if (this.selectedOrderId) {
-    console.log('Sending Cancel for ID:', this.selectedOrderId);
+  confirmCancel() {
+    if (this.selectedOrderId) {
+      this.http.patch(`${this.apiUrl}/${this.selectedOrderId}/status`, { status: 'Cancelled' }).subscribe({
+        next: () => {
+          const modalElement = document.getElementById('cancelModal');
+          const modalInstance = bootstrap.Modal.getInstance(modalElement);
+          if (modalInstance) modalInstance.hide();
 
-    this.http.patch(`${this.apiUrl}/${this.selectedOrderId}/status`, { status: 'Cancelled' }).subscribe({
-      next: () => {
-        const modalElement = document.getElementById('cancelModal');
-        const modalInstance = bootstrap.Modal.getInstance(modalElement);
-        if (modalInstance) modalInstance.hide();
-
-        this.showNotification('Order has been cancelled successfully');
-        this.loadOrders();
-        this.selectedOrderId = null;
-      },
-      error: (err) => {
-        console.error('FULL SERVER ERROR:', err);
-        this.showNotification(err.error?.message || 'Error cancelling order', true);
-      }
-    });
+          this.showNotification('Order has been cancelled successfully');
+          this.loadOrders();
+          this.selectedOrderId = null;
+        },
+        error: (err) => {
+          this.showNotification(err.error?.message || 'Error cancelling order', true);
+        }
+      });
+    }
   }
-}
+
   applyFilter(status: string) {
     this.currentFilter = status;
     this.currentPage = 1;
     this.loadOrders();
   }
 
-  private applyClientFilter() {
-    if (this.currentFilter !== 'All') {
-      this.filteredOrders = this.filteredOrders.filter(o => o.status === this.currentFilter);
-    }
-  }
-
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
       this.loadOrders();
+    }
+  }
+
+  openItemsModal(order: Order) {
+    this.selectedOrderTotal = order.totalPrice || 0;
+    
+    // Initialize items with loading state for products not populated
+    this.selectedOrderItems = (order.items || []).map(i => {
+      const isPopulated = typeof i.product === 'object' && i.product !== null;
+      return {
+        ...i,
+        productId: isPopulated ? i.product._id : i.product,
+        productName: isPopulated ? (i.product.name || 'Unknown Product') : 'Loading...'
+      };
+    });
+
+    // Fetch details for unpopulated products
+    this.selectedOrderItems.forEach(item => {
+      if (item.productName === 'Loading...') {
+        this.http.get<any>(`http://localhost:3000/api/products/${item.productId}`).subscribe({
+          next: (res) => {
+            item.productName = res.data?.data?.name || 'Unknown Product';
+          },
+          error: () => {
+            item.productName = 'Unknown Product';
+          }
+        });
+      }
+    });
+
+    const modalElement = document.getElementById('itemsModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
     }
   }
 }

@@ -21,6 +21,10 @@
           <button (click)="applyFilter('Delivered')" 
                   [ngClass]="currentFilter === 'Delivered' ? 'btn-success text-dark fw-bold' : 'btn-outline-secondary text-secondary'"
                   class="btn btn-sm rounded-pill px-4">Delivered</button>
+
+          <button (click)="applyFilter('Cancelled')" 
+                  [ngClass]="currentFilter === 'Cancelled' ? 'btn-success text-dark fw-bold' : 'btn-outline-secondary text-secondary'"
+                  class="btn btn-sm rounded-pill px-4">Cancelled</button>
         </div>
       </div>
 
@@ -42,16 +46,20 @@
                 <td class="ps-4 fw-bold text-white-50 small">#{{ order._id.slice(-5) }}</td>
                 
                 <td class="text-white small">
-                  {{ order.user?.name || order.user?.username || 'Guest User' }}
+                  {{ order.user.name || order.user.username || 'Guest User' }}
                 </td>
                 
-                <td>{{ order.products.length }}</td>                
+                <td class="text-center">
+                  <button class="btn btn-sm btn-outline-info rounded-pill px-3" (click)="openItemsModal(order)">
+                    View ({{ order.items.length || 0 }})
+                  </button>
+                </td>                
                 
                 <td class="fw-bold text-success">${{ order.totalPrice }}</td>
                 
                 <td>
                   <select class="form-select form-select-sm bg-black text-white border-secondary border-opacity-50 w-auto" 
-                          [(ngModel)]="order.status">
+                          [value]="order.status" (change)="order.status = $any($event.target).value">
                     <option value="Pending">Pending</option>
                     <option value="Shipped">Shipped</option>
                     <option value="Delivered">Delivered</option>
@@ -106,6 +114,55 @@
       <div class="modal-footer border-secondary">
         <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Keep Order</button>
         <button type="button" class="btn btn-danger rounded-pill px-4 fw-bold" (click)="confirmCancel()">Yes, Cancel It</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="itemsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark text-white border-secondary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title fw-bold text-uppercase" style="letter-spacing: 1px;">Order Items</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-4">
+        <div class="table-responsive">
+          <table class="table table-dark table-hover align-middle mb-0">
+            <thead class="bg-black">
+              <tr class="text-secondary small">
+                <th class="border-0">PRODUCT</th>
+                <th class="border-0 text-center">QUANTITY</th>
+                <th class="border-0 text-end">PRICE</th>
+                <th class="border-0 text-end">SUBTOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of selectedOrderItems" class="border-secondary border-opacity-10">
+                <td class="text-white small">
+                  <div class="d-flex align-items-center">
+                    <img [src]="'https://picsum.photos/seed/' + item.productId + '/100/100'" [alt]="item.productName" class="rounded-2 me-3 shadow-sm border border-secondary border-opacity-50" style="width: 45px; height: 45px; object-fit: cover;">
+                    <a [routerLink]="['/products', item.productId]" data-bs-dismiss="modal" class="fw-semibold text-info text-decoration-none product-link-hover">
+                      {{ item.productName }}
+                    </a>
+                  </div>
+                </td>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td class="text-end">${{ item.price }}</td>
+                <td class="text-end fw-bold text-success">${{ item.price * item.quantity }}</td>
+              </tr>
+            </tbody>
+            <tfoot class="border-top-0">
+              <tr>
+                <td colspan="3" class="text-end fw-bold pt-3">Total:</td>
+                <td class="text-end fw-bold text-success pt-3">${{ selectedOrderTotal }}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
