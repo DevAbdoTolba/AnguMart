@@ -1,0 +1,28 @@
+.avatar-circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.card {
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.text-warning {
+  font-size: 1.1rem;
+}
+
+.product-link-hover {
+  transition: color 0.2s ease;
+}
+
+.product-link-hover:hover {
+  color: #1DB954 !important; /* Bootstrap success color variation */
+  text-decoration: underline !important;
+}
