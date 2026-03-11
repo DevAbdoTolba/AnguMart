@@ -1,7 +1,13 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, computed, effect, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Subject, catchError, delay, of, startWith, switchMap, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Subject, catchError, delay, finalize, map, of, startWith, switchMap, tap } from 'rxjs';
+
+import { environment } from '../../../../environments/environment';
+import { CartItem } from '../../../core/models/cart.model';
+import { Product } from '../../../core/models/product.model';
+import { CartService } from '../../../core/services/cart.service';
 
 interface Address {
   id: string;
@@ -9,27 +15,38 @@ interface Address {
   details: string;
 }
 
-interface CartItem {
-  id: string;
-  name: string;
-  qty: number;
-  price: number;
-  gradient: string;
-}
-
 interface PaymentMethod {
-  id: 'paypal' | 'wallet' | 'cod';
+  id: 'paypal' | 'wallet' | 'COD';
   label: string;
   description: string;
 }
 
+interface CheckoutRequest {
+  paymentMethod: PaymentMethod['id'];
+  address: string;
+  phone: string;
+}
+
+interface CheckoutResponse {
+  status?: string;
+  message?: string;
+  data?: any
+  approvalUrl?: string;
+}
+
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-checkout-flow',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, RouterLink],
   templateUrl: './checkout-flow.html',
   styleUrl: './checkout-flow.css',
 })
 export class CheckoutFlow {
+  private readonly http = inject(HttpClient);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly cartService = inject(CartService);
+
   private readonly addressReload$ = new Subject<void>();
   private readonly cartReload$ = new Subject<void>();
 
@@ -38,9 +55,14 @@ export class CheckoutFlow {
   protected readonly cartLoading = signal(true);
   protected readonly cartError = signal<string | null>(null);
   protected readonly submitAttempted = signal(false);
+  protected readonly checkoutLoading = signal(false);
+  protected readonly checkoutError = signal<string | null>(null);
+  protected readonly checkoutSuccess = signal(false);
+  protected readonly approvalLink = signal<string | null>(null);
 
   protected readonly selectedAddressId = signal<string | null>(null);
   protected readonly selectedPaymentId = signal<PaymentMethod['id'] | null>('paypal');
+  protected readonly phone = signal('');
 
   protected readonly addresses = toSignal(
     this.addressReload$.pipe(
@@ -67,7 +89,8 @@ export class CheckoutFlow {
       switchMap(() => {
         this.cartLoading.set(true);
         this.cartError.set(null);
-        return this.mockCartItems().pipe(
+        return this.cartService.getCart().pipe(
+          map((response) => response.data.data),
           tap(() => this.cartLoading.set(false)),
           catchError(() => {
             this.cartLoading.set(false);
@@ -81,7 +104,7 @@ export class CheckoutFlow {
   );
 
   protected readonly subtotal = computed(() =>
-    this.cartItems().reduce((sum, item) => sum + item.price * item.qty, 0)
+    this.cartItems().reduce((sum, item) => sum + this.getProductPrice(item) * item.quantity, 0)
   );
 
   protected readonly taxRate = signal(0.14);
@@ -89,12 +112,14 @@ export class CheckoutFlow {
   protected readonly shippingCost = computed(() => (this.cartItems().length > 0 ? 0 : 0));
   protected readonly total = computed(() => this.subtotal() + this.taxAmount() + this.shippingCost());
 
+  protected readonly isPhoneValid = computed(() => this.phone().trim().length >= 8);
+
   protected readonly canPlaceOrder = computed(() =>
-    this.cartItems().length > 0 && !!this.selectedAddressId() && !!this.selectedPaymentId()
+    this.cartItems().length > 0 && !!this.selectedAddressId() && !!this.selectedPaymentId() && this.isPhoneValid()
   );
 
   protected readonly addressRequirementMessage = computed(() => {
-    if (!this.submitAttempted()) {
+    if (!this.submitAttempted() || this.checkoutSuccess()) {
       return null;
     }
     if (this.cartItems().length === 0) {
@@ -105,6 +130,9 @@ export class CheckoutFlow {
     }
     if (!this.selectedPaymentId()) {
       return 'Choose a payment method to continue.';
+    }
+    if (!this.isPhoneValid()) {
+      return 'Enter a valid phone number to continue.';
     }
     return null;
   });
@@ -121,7 +149,7 @@ export class CheckoutFlow {
       description: 'Current balance: $1,250.00',
     },
     {
-      id: 'cod',
+      id: 'COD',
       label: 'Cash on Delivery',
       description: 'Pay when your order arrives',
     },
@@ -154,6 +182,88 @@ export class CheckoutFlow {
 
   protected placeOrder(): void {
     this.submitAttempted.set(true);
+    if (!this.canPlaceOrder()) {
+      return;
+    }
+
+    const selectedAddress = this.addresses().find(
+      (address) => address.id === this.selectedAddressId()
+    );
+
+    const payload: CheckoutRequest = {
+      paymentMethod: this.selectedPaymentId()!,
+      address: selectedAddress?.details ?? '',
+      phone: this.phone().trim(),
+    };
+
+    this.checkoutLoading.set(true);
+    this.checkoutError.set(null);
+    this.checkoutSuccess.set(false);
+    this.approvalLink.set(null);
+
+    this.http
+      .post<CheckoutResponse>(`${environment.apiUrl}/cart/checkout`, payload)
+      .pipe(
+        finalize(() => this.checkoutLoading.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error) => {
+          const message = error?.error?.message || 'Checkout failed. Please try again.';
+          this.checkoutError.set(message);
+          return of(null);
+        })
+      )
+      .subscribe((response) => {
+        if (!response) {
+          return;
+        }
+        const link = response.approvalUrl ?? null;
+        this.approvalLink.set(link);
+        this.checkoutSuccess.set(true);
+        this.cartReload$.next();
+      });
+  }
+
+  protected getProduct(item: CartItem): Product | null {
+    if (typeof item.productId === 'object' && item.productId !== null) {
+      return item.productId as Product;
+    }
+    return null;
+  }
+
+  protected getProductId(item: CartItem): string {
+    if (typeof item.productId === 'string') {
+      return item.productId;
+    }
+    return (item.productId as Product)?._id ?? '';
+  }
+
+  protected getProductName(item: CartItem): string {
+    return this.getProduct(item)?.name ?? 'Unknown Product';
+  }
+
+  protected getProductPrice(item: CartItem): number {
+    return this.getProduct(item)?.price ?? 0;
+  }
+
+  protected getProductGradient(item: CartItem): string {
+    const id = this.getProductId(item) || 'fallback';
+    const palette = [
+      'linear-gradient(135deg,#1a1a2e,#16213e)',
+      'linear-gradient(135deg,#0f3460,#533483)',
+      'linear-gradient(135deg,#2c3e50,#4ca1af)',
+      'linear-gradient(135deg,#232526,#414345)',
+    ];
+    const index = Math.abs(this.hashCode(id)) % palette.length;
+    return palette[index];
+  }
+
+  private hashCode(value: string): number {
+    let hash = 0;
+    for (let i = 0; i < value.length; i += 1) {
+      hash = (hash << 5) - hash + value.charCodeAt(i);
+      hash |= 0;
+    }
+    return hash;
   }
 
   private mockAddresses() {
@@ -169,31 +279,5 @@ export class CheckoutFlow {
         details: '45 Tahrir Square, Floor 3, Cairo 11511, Egypt',
       },
     ] satisfies Address[]).pipe(delay(400));
-  }
-
-  private mockCartItems() {
-    return of([
-      {
-        id: 'item-1',
-        name: 'Wireless Headphones',
-        qty: 1,
-        price: 249.99,
-        gradient: 'linear-gradient(135deg,#1a1a2e,#16213e)',
-      },
-      {
-        id: 'item-2',
-        name: 'Smart Watch Series X',
-        qty: 1,
-        price: 399.0,
-        gradient: 'linear-gradient(135deg,#0f3460,#533483)',
-      },
-      {
-        id: 'item-3',
-        name: 'Premium Cotton Hoodie',
-        qty: 2,
-        price: 79.5,
-        gradient: 'linear-gradient(135deg,#2c3e50,#4ca1af)',
-      },
-    ] satisfies CartItem[]).pipe(delay(400));
   }
 }

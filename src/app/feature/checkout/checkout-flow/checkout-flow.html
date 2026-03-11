@@ -1,9 +1,10 @@
 <div class="checkout-page">
   <div class="container py-4 py-lg-5">
-    <h1 class="section-heading">Checkout</h1>
+    @if (!checkoutSuccess()) {
+      <h1 class="section-heading">Checkout</h1>
 
-    <div class="checkout-layout">
-      <div class="checkout-main">
+      <div class="checkout-layout">
+        <div class="checkout-main">
         <section class="card card-bordered">
           <div class="section-header">
             <h2>Shipping Address</h2>
@@ -46,6 +47,21 @@
               }
             </div>
           }
+
+          <div class="phone-field">
+            <label class="field-label" for="phone">Phone Number</label>
+            <input
+              id="phone"
+              class="field-input"
+              type="tel"
+              placeholder="01000000000"
+              [value]="phone()"
+              (input)="phone.set($any($event.target).value)"
+            />
+            @if (submitAttempted() && !isPhoneValid()) {
+              <p class="field-error">Enter a valid phone number.</p>
+            }
+          </div>
         </section>
 
         <section class="card card-bordered">
@@ -79,13 +95,25 @@
           </div>
         }
 
+        @if (checkoutError()) {
+          <div class="state-block state-error">
+            <div class="state-icon">!</div>
+            <p>{{ checkoutError() }}</p>
+          </div>
+        }
+
+
         <button
           class="btn btn-primary btn-full btn-lg"
           type="button"
-          [disabled]="!canPlaceOrder()"
+          [disabled]="!canPlaceOrder() || checkoutLoading()"
           (click)="placeOrder()"
         >
-          Place Order — {{ total() | currency: 'USD' }}
+          @if (checkoutLoading()) {
+            Placing Order...
+          } @else {
+            Place Order — {{ total() | currency: 'USD' }}
+          }
         </button>
         <p class="text-muted text-sm mt-2">Confirm your shipping and payment details before placing the order.</p>
       </div>
@@ -117,14 +145,14 @@
           </div>
         } @else {
           <div class="summary-items">
-            @for (item of cartItems(); track item.id) {
+            @for (item of cartItems(); track getProductId(item)) {
               <div class="summary-item">
-                <div class="summary-thumb" [style.background]="item.gradient"></div>
+                <div class="summary-thumb" [style.background]="getProductGradient(item)"></div>
                 <div class="summary-details">
-                  <p class="text-sm font-medium">{{ item.name }}</p>
-                  <p class="text-xs text-muted">Qty: {{ item.qty }}</p>
+                  <p class="text-sm font-medium">{{ getProductName(item) }}</p>
+                  <p class="text-xs text-muted">Qty: {{ item.quantity }}</p>
                 </div>
-                <p class="text-sm font-semibold">{{ item.price * item.qty | currency: 'USD' }}</p>
+                <p class="text-sm font-semibold">{{ getProductPrice(item) * item.quantity | currency: 'USD' }}</p>
               </div>
             }
           </div>
@@ -138,5 +166,34 @@
         </div>
       </aside>
     </div>
+    } @else {
+      <div class="success-splash text-center py-5">
+        <div class="state-icon mx-auto mb-4" style="width: 100px; height: 100px; font-size: 3rem; border-radius: 50%; background: rgba(29, 185, 84, 0.1); color: #1db954;">✓</div>
+        <h2 class="mb-3" style="font-size: 2.5rem; font-weight: 700;">Thank You!</h2>
+        <p class="text-muted mb-4 mx-auto" style="max-width: 500px; font-size: 1.1rem;">
+          Your order has been created successfully. We're getting it ready for you!
+        </p>
+
+        @if (selectedPaymentId() === 'paypal') {
+          <div class="paypal-action mt-5 mb-5 p-4 mx-auto" style="max-width: 500px; background: rgba(255, 202, 40, 0.08); border: 1px dashed rgba(255, 202, 40, 0.6); border-radius: 14px;">
+            <h4 class="text-warning mb-2" style="font-weight: 600;">Action Required</h4>
+            <p class="mb-4" style="color: rgba(255, 255, 255, 0.8);">Please complete your payment via PayPal to ensure your order gets shipped promptly.</p>
+            <a
+              class="btn btn-primary btn-full btn-lg"
+              [href]="approvalLink() ?? '#'"
+              [class.disabled]="!approvalLink()"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Pay with PayPal
+            </a>
+          </div>
+        }
+        
+        <div class="mt-4">
+          <a routerLink="/" class="btn btn-outline btn-lg px-5">Continue Browsing</a>
+        </div>
+      </div>
+    }
   </div>
 </div>
