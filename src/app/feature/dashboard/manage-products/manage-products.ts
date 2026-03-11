@@ -26,6 +26,15 @@ export class ManageProductsComponent implements OnInit {
   
   productIdToDelete: string | null = null;
 
+  // Pagination
+  currentPage = 1;
+  itemsPerPage = 5;
+  totalPages = 1;
+  totalProducts = 0;
+  private pageCache = new Map<number, Product[]>();
+  private maxKnownPage = 0;
+  private firstEmptyPage: number | null = null;
+
   // Categories Multi-Select logic
   categories: Category[] = [];
   filteredCategories: Category[] = [];
@@ -62,22 +71,15 @@ export class ManageProductsComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.productService.getAllProducts().subscribe({
-      next: (res: any) => {
-        if (res.status === 'success' && res.data) {
-          if (Array.isArray(res.data)) {
-            this.products = res.data;
-          } else {
-            const keys = Object.keys(res.data);
-            const firstArrayKey = keys.find(key => Array.isArray(res.data[key]));
-            if (firstArrayKey) this.products = res.data[firstArrayKey];
-          }
-        }
-      },
-      error: (err: any) => {
-        this.errorMessage = "Could not load products. Please check your connection.";
-      }
-    });
+    const cached = this.pageCache.get(this.currentPage);
+    if (cached) {
+      this.products = cached;
+      this.updatePaginationForPage(this.currentPage, cached.length);
+      this.prefetchNextTwoPages();
+      return;
+    }
+
+    this.fetchPage(this.currentPage, true);
   }
 
   loadCategories(): void {
@@ -306,5 +308,112 @@ export class ManageProductsComponent implements OnInit {
     Object.keys(this.productForm.controls).forEach(key => {
       this.productForm.get(key)?.setErrors(null);
     });
+  }
+
+  get pagesArray(): number[] {
+    const array: number[] = [];
+    const window = 2; // 2 left + current + 2 right
+    const start = Math.max(1, this.currentPage - window);
+    const end = Math.min(this.totalPages, this.currentPage + window);
+    for (let i = start; i <= end; i++) {
+      array.push(i);
+    }
+    return array;
+  }
+
+  changePage(page: number): void {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+      this.currentPage = page;
+      this.loadProducts();
+    }
+  }
+
+  private fetchPage(page: number, setCurrent: boolean): void {
+    const params = {
+      page,
+      limit: this.itemsPerPage,
+      sort: '-createdAt',
+    };
+
+    this.productService.getAllProducts(params).subscribe({
+      next: (res: any) => {
+        let extractedProducts: Product[] = [];
+        if (res.status === 'success' && res.data) {
+          if (Array.isArray(res.data?.data)) {
+            extractedProducts = res.data.data;
+          } else if (Array.isArray(res.data)) {
+            extractedProducts = res.data;
+          } else if (res.data && typeof res.data === 'object') {
+            const keys = Object.keys(res.data);
+            const firstArrayKey = keys.find(key => Array.isArray(res.data[key]));
+            if (firstArrayKey) extractedProducts = res.data[firstArrayKey];
+          }
+        } else if (Array.isArray(res?.data?.data)) {
+          extractedProducts = res.data.data;
+        }
+
+        const pageResults = extractedProducts.length;
+        this.pageCache.set(page, extractedProducts);
+
+        if (pageResults === 0) {
+          this.firstEmptyPage = this.firstEmptyPage
+            ? Math.min(this.firstEmptyPage, page)
+            : page;
+          this.updateEffectiveTotalPages();
+          if (setCurrent && page > 1) {
+            this.currentPage = page - 1;
+            this.loadProducts();
+          }
+          return;
+        }
+
+        this.maxKnownPage = Math.max(this.maxKnownPage, page);
+
+        if (setCurrent) {
+          this.products = extractedProducts;
+          this.updatePaginationForPage(page, pageResults);
+          this.prefetchNextTwoPages();
+        } else {
+          this.updateEffectiveTotalPages();
+        }
+      },
+      error: () => {
+        this.errorMessage = "Could not load products. Please check your connection.";
+      }
+    });
+  }
+
+  private updatePaginationForPage(page: number, pageResults: number): void {
+    if (pageResults === 0) {
+      this.firstEmptyPage = this.firstEmptyPage
+        ? Math.min(this.firstEmptyPage, page)
+        : page;
+    } else {
+      this.maxKnownPage = Math.max(this.maxKnownPage, page);
+    }
+    this.updateEffectiveTotalPages();
+  }
+
+  private updateEffectiveTotalPages(): void {
+    const windowRight = 2;
+    let inferred = Math.max(this.maxKnownPage, this.currentPage + windowRight);
+    if (this.firstEmptyPage !== null) {
+      inferred = Math.min(inferred, Math.max(1, this.firstEmptyPage - 1));
+    }
+    this.totalPages = Math.max(1, inferred);
+  }
+
+  private prefetchNextTwoPages(): void {
+    const next1 = this.currentPage + 1;
+    const next2 = this.currentPage + 2;
+
+    if (this.firstEmptyPage !== null && next1 >= this.firstEmptyPage) return;
+
+    if (!this.pageCache.has(next1)) {
+      this.fetchPage(next1, false);
+    }
+    if (!this.pageCache.has(next2)) {
+      this.fetchPage(next2, false);
+    }
   }
 }

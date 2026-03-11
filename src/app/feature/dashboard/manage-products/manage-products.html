@@ -171,6 +171,26 @@
     </div>
   </div>
 
+  <nav class="mt-4" *ngIf="totalPages > 1">
+    <ul class="pagination pagination-sm justify-content-center border-0">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link bg-dark border-secondary text-secondary" (click)="changePage(currentPage - 1)" style="cursor: pointer;">&laquo;</a>
+      </li>
+
+      <li class="page-item" *ngFor="let p of pagesArray" [class.active]="currentPage === p">
+        <a class="page-link border-secondary" 
+           [ngClass]="currentPage === p ? 'bg-success border-success text-white' : 'bg-dark text-secondary'"
+           (click)="changePage(p)" style="cursor: pointer;">
+          {{ p }}
+        </a>
+      </li>
+
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link bg-dark border-secondary text-secondary" (click)="changePage(currentPage + 1)" style="cursor: pointer;">&raquo;</a>
+      </li>
+    </ul>
+  </nav>
+
   <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content bg-dark border-secondary shadow-lg">

@@ -33,8 +33,17 @@ export class ProductService {
   // 1. PRODUCT METHODS (CRUD & FETCHING)
   // ==========================================================
 
-  getAllProducts(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+  getAllProducts(params?: ProductQueryParams): Observable<any> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(key => {
+        const value = params[key as keyof ProductQueryParams];
+        if (value !== undefined && value !== null && value !== '') {
+          httpParams = httpParams.append(key, String(value));
+        }
+      });
+    }
+    return this.http.get<any>(this.apiUrl, { params: httpParams });
   }
 
   getProducts(params?: ProductQueryParams): Observable<any> {
