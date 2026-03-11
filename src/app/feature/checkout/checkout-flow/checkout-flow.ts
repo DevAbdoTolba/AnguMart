@@ -117,7 +117,7 @@ export class CheckoutFlow {
   );
 
   protected readonly addressRequirementMessage = computed(() => {
-    if (!this.submitAttempted()) {
+    if (!this.submitAttempted() || this.checkoutSuccess()) {
       return null;
     }
     if (this.cartItems().length === 0) {
