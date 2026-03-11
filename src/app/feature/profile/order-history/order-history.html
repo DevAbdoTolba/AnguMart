@@ -1,1 +1,166 @@
-<p>order-history works!</p>
+<div class="order-history-page">
+  <div class="container py-4 py-lg-5">
+    <div class="page-header">
+      <div>
+        <h1 class="section-heading">Order History</h1>
+        <p class="text-muted">Review your past purchases and track shipping status.</p>
+      </div>
+      <a routerLink="/profile" class="btn btn-ghost btn-sm">← Back to Profile</a>
+    </div>
+
+    <div class="detail-wrapper">
+      @if (detailLoading()) {
+        <div class="card card-bordered">
+          <div class="skeleton-row"></div>
+          <div class="skeleton-row"></div>
+        </div>
+      } @else if (detailError()) {
+        <div class="card card-bordered">
+          <div class="state-block state-error">
+            <span class="state-icon">!</span>
+            <div>
+              <p class="state-title">{{ detailError() }}</p>
+              <p class="state-subtitle">Select an order to try again.</p>
+            </div>
+          </div>
+        </div>
+      } @else if (selectedOrder()) {
+        <div class="card card-bordered">
+          <div class="detail-header">
+            <div>
+              <div class="detail-title">
+                <h2>Order #{{ selectedOrder()!._id.slice(-8).toUpperCase() }}</h2>
+                @if (selectedOrder()!.type === 'walletCharge') {
+                  <span class="order-tag">Wallet Recharge</span>
+                }
+              </div>
+              <p class="text-sm text-secondary">Placed on {{ selectedOrder()!.createdAt | date: 'MMM d, yyyy' }}</p>
+            </div>
+            <span class="status" [class]="getStatusClass(selectedOrder()!.status)">
+              {{ selectedOrder()!.status }}
+            </span>
+          </div>
+
+          <div class="detail-grid">
+            <div>
+              <p class="label">Payment</p>
+              <p class="value">{{ getPaymentMethod(selectedOrder()!) }}</p>
+            </div>
+            <div>
+              <p class="label">Payment Status</p>
+              <p class="value">{{ selectedOrder()!.paymentStatus }}</p>
+            </div>
+            <div>
+              <p class="label">Items</p>
+              <p class="value">{{ getItemsCount(selectedOrder()!) }}</p>
+            </div>
+            <div>
+              <p class="label">Total Paid</p>
+              <p class="value text-accent">{{ selectedOrder()!.totalPrice | currency: 'USD' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-bordered mt-4">
+          <h3>Items</h3>
+          <div class="item-list">
+            @for (item of selectedOrder()!.items; track getProductId(item)) {
+              <div class="item-row">
+                <div class="item-info">
+                  <a
+                    class="item-link"
+                    [routerLink]="['/products', getProductId(item)]"
+                  >
+                    {{ getProductLabel(item) }}
+                  </a>
+                  <p class="text-xs text-muted">Qty: {{ item.quantity }}</p>
+                  <p class="text-xs text-muted">Unit price: {{ item.price | currency: 'USD' }}</p>
+                </div>
+                <p class="font-semibold">{{ item.price * item.quantity | currency: 'USD' }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="card card-bordered">
+          <div class="state-block state-empty">
+            <span class="state-icon">!</span>
+            <div>
+              <p class="state-title">Select an order</p>
+              <p class="state-subtitle">Choose an order below to view details.</p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="card card-bordered mt-4">
+      <div class="table-header">
+        <h2>My Orders</h2>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="refreshOrders()">Refresh</button>
+      </div>
+
+      @if (ordersLoading()) {
+        <div class="skeleton-row"></div>
+        <div class="skeleton-row"></div>
+        <div class="skeleton-row"></div>
+      } @else if (ordersError()) {
+        <div class="state-block state-error">
+          <span class="state-icon">!</span>
+          <div>
+            <p class="state-title">{{ ordersError() }}</p>
+            <p class="state-subtitle">Please try again.</p>
+          </div>
+        </div>
+      } @else if (!hasOrders()) {
+        <div class="state-block state-empty">
+          <span class="state-icon">!</span>
+          <div>
+            <p class="state-title">No orders yet</p>
+            <p class="state-subtitle">Your past orders will show up here once you place them.</p>
+          </div>
+        </div>
+      } @else {
+        <div class="table-responsive">
+          <table class="table table-dark align-middle">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (order of orders(); track order._id) {
+                <tr [class.active-row]="selectedOrderId() === order._id">
+                  <td class="font-semibold">#{{ order._id.slice(-8).toUpperCase() }}</td>
+                  <td>{{ order.createdAt | date: 'MMM d, yyyy' }}</td>
+                  <td>{{ getItemsCount(order) }} items</td>
+                  <td class="font-semibold">{{ order.totalPrice | currency: 'USD' }}</td>
+                  <td>
+                    <span class="status" [class]="getStatusClass(order.status)">{{ order.status }}</span>
+                    @if (order.type === 'walletCharge') {
+                      <span class="order-tag ms-2">Wallet Recharge</span>
+                    }
+                  </td>
+                  <td>
+                    <a
+                      class="btn btn-secondary btn-sm"
+                      [routerLink]="['/orders-history', order._id]"
+                      (click)="selectOrder(order._id)"
+                    >
+                      View
+                    </a>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+</div>
