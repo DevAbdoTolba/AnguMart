@@ -1,13 +1,12 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { ReviewService } from '../../../core/services/review.service';
 
 @Component({
   selector: 'app-product-review',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './product-review.html',
   styleUrl: './product-review.css',
 })

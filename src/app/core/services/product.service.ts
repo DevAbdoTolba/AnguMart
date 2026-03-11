@@ -37,6 +37,22 @@ export class ProductService {
     return this.http.get<any>(this.apiUrl);
   }
 
+  getProducts(params?: ProductQueryParams): Observable<any> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(key => {
+        if (params[key as keyof ProductQueryParams] !== undefined && params[key as keyof ProductQueryParams] !== null) {
+          httpParams = httpParams.append(key, String(params[key as keyof ProductQueryParams]));
+        }
+      });
+    }
+    return this.http.get<any>(this.apiUrl, { params: httpParams });
+  }
+
+  getProductById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
+
   // الميثود دي زيادة لزوم الـ Dashboard
   getAdminProducts(): Observable<any> {
     return this.http.get<any>(`${this.adminApiUrl}/products`);

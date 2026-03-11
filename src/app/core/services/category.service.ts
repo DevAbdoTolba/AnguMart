@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs'; 
 
 export interface Category {
@@ -15,9 +15,32 @@ export class CategoryService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:3000/api/categories';
 
-  getAllCategories(): Observable<Category[]> {
-    return this.http.get<any>(this.apiUrl).pipe(
-      map(res => res.data)
+  getAllCategories(params?: any): Observable<Category[]> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(key => {
+        if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+          httpParams = httpParams.append(key, String(params[key]));
+        }
+      });
+    }
+
+    return this.http.get<any>(this.apiUrl, { params: httpParams }).pipe(
+      map(res => {
+        let extractedCats: Category[] = [];
+        if (Array.isArray(res)) {
+          extractedCats = res;
+        } else if (res.data && Array.isArray(res.data)) {
+          extractedCats = res.data;
+        } else if (res.data?.data && Array.isArray(res.data.data)) {
+          extractedCats = res.data.data;
+        } else if (res.data && typeof res.data === 'object') {
+           const keys = Object.keys(res.data);
+           const firstArrayKey = keys.find(key => Array.isArray(res.data[key]));
+           if (firstArrayKey) extractedCats = res.data[firstArrayKey];
+        }
+        return extractedCats;
+      })
     );
   }
 
