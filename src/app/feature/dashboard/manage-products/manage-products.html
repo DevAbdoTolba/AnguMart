@@ -27,11 +27,40 @@
             </div>
           </div>
 
-          <div class="col-md-6">
-            <label class="form-label text-light">Category ID</label>
-            <input type="text" class="form-control bg-dark-input text-white border-0" formControlName="category" placeholder="Paste Category ID">
+          <div class="col-md-6 position-relative">
+            <label class="form-label text-light">Categories</label>
+            <div class="category-multiselect" (click)="isDropdownOpen = true">
+              <div class="category-chips">
+                <span *ngFor="let c of selectedCategoryNames" class="category-chip">
+                  {{ c.name }}
+                  <button type="button" class="chip-remove" (click)="removeCategory(c.id, $event)">&times;</button>
+                </span>
+                <input type="text"
+                       class="category-search-input"
+                       placeholder="Search categories..."
+                       [(ngModel)]="categorySearchTerm"
+                       [ngModelOptions]="{standalone: true}"
+                       (input)="filterCategories()"
+                       (focus)="isDropdownOpen = true"
+                       (blur)="onBlurDropdown()">
+              </div>
+            </div>
+            <input type="hidden" formControlName="category">
+
+            <div class="category-dropdown" *ngIf="isDropdownOpen">
+              <div *ngIf="filteredCategories.length === 0" class="category-empty">No categories found</div>
+              <button type="button"
+                      class="category-option"
+                      *ngFor="let cat of filteredCategories"
+                      [class.selected]="isCategorySelected(cat._id!)"
+                      (click)="toggleCategory(cat._id!)">
+                <span>{{ cat.name }}</span>
+                <i class="bi bi-check-lg" *ngIf="isCategorySelected(cat._id!)"></i>
+              </button>
+            </div>
+
             <div *ngIf="productForm.get('category')?.invalid && (productForm.get('category')?.dirty || productForm.get('category')?.touched)" class="text-danger small mt-1">
-              <span *ngIf="productForm.get('category')?.errors?.['required']">Category ID is required to link the product.</span>
+              <span *ngIf="productForm.get('category')?.errors?.['required']">At least one category is required.</span>
             </div>
           </div>
 
@@ -120,7 +149,7 @@
               </span>
             </td>
             <td>
-              <code class="text-info small">{{ product.category?._id || product.category }}</code>
+              <span class="text-info small">{{ getCategoryDisplay(product.category) }}</span>
             </td>
             <td class="text-center">
               <button class="btn btn-sm btn-outline-info me-2" (click)="editProduct(product)">
