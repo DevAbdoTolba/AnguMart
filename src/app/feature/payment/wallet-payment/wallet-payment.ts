@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -18,7 +19,7 @@ interface WalletChargeResponse {
 
 @Component({
   selector: 'app-wallet-payment',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './wallet-payment.html',
   styleUrl: './wallet-payment.css',
 })
