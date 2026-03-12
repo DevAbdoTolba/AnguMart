@@ -1,0 +1,22 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #000;
+}
+
+/* Ensure the sidebar always occupies a visible left column */
+.admin-layout > app-sidebar {
+  display: block;
+  flex: 0 0 260px;
+  width: 260px;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  z-index: 1000;
+}
+
+.admin-content {
+  flex: 1;
+  min-width: 0;
+}
+

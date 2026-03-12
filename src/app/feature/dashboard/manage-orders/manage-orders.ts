@@ -126,6 +126,15 @@ export class ManageOrders implements OnInit {
     this.loadOrders();
   }
 
+  get pagesArray(): number[] {
+    const pages: number[] = [];
+    const window = 2; // 2 left + current + 2 right
+    const start = Math.max(1, this.currentPage - window);
+    const end = Math.min(this.totalPages, this.currentPage + window);
+    for (let i = start; i <= end; i++) pages.push(i);
+    return pages;
+  }
+
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;

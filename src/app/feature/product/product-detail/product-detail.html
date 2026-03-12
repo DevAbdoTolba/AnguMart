@@ -35,17 +35,6 @@
 <!-- Product Content -->
 @if (!isLoading && !errorMessage && product) {
   <div class="container py-5">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb small">
-        <li class="breadcrumb-item"><a routerLink="/products" class="text-decoration-none text-body-secondary">Products</a></li>
-        @if (product.category) {
-          <li class="breadcrumb-item"><span class="text-body-secondary">{{ product.category instanceof Array ? product.category[0] : product.category }}</span></li>
-        }
-        <li class="breadcrumb-item active text-success">{{ product.name }}</li>
-      </ol>
-    </nav>
-
     <!-- Product Detail -->
     <div class="row g-4 mb-5">
       <div class="col-lg-6">

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { AdminLayout } from './feature/dashboard/admin-layout/admin-layout';
 
 export const routes: Routes = [
     // public / customer-facing routes
@@ -68,43 +69,39 @@ export const routes: Routes = [
     // admin/dashboard routes
     {
         path: 'dashboard',
-        redirectTo: 'dashboard/stats',
-        pathMatch: 'full'
-    },
-    {
-        path: 'dashboard/stats',
-        loadComponent: () => import('./feature/dashboard/store-stats/store-stats').then((m) => m.StoreStats),
-        canActivate: [adminGuard]
-    },
-    {
-        path: 'dashboard/users',
-        loadComponent: () => import('./feature/dashboard/manage-users/manage-users').then((m) => m.ManageUsers),
-        canActivate: [adminGuard]
-    },
-    {
-        path: 'dashboard/users/:id',
-        loadComponent: () => import('./feature/dashboard/manage-users/manage-users').then((m) => m.ManageUsers),
-        canActivate: [adminGuard]
-    },
-    {
-        path: 'dashboard/products',
-        loadComponent: () => import('./feature/dashboard/manage-products/manage-products').then((m) => m.ManageProductsComponent),
-        canActivate: [adminGuard]
-    },
-    {
-        path: 'dashboard/categories',
-        loadComponent: () => import('./feature/dashboard/manage-categories/manage-categories').then((m) => m.ManageCategoriesComponent),
-        canActivate: [adminGuard]
-    },
-    {
-        path: 'dashboard/orders',
-        loadComponent: () => import('./feature/dashboard/manage-orders/manage-orders').then((m) => m.ManageOrders),
-        canActivate: [adminGuard]
-    },
-    {
-        path: 'dashboard/reviews',
-        loadComponent: () => import('./feature/dashboard/manage-reviews/manage-reviews').then((m) => m.ManageReviews),
-        canActivate: [adminGuard]
+        component: AdminLayout,
+        canActivate: [adminGuard],
+        children: [
+            { path: '', redirectTo: 'stats', pathMatch: 'full' },
+            {
+                path: 'stats',
+                loadComponent: () => import('./feature/dashboard/store-stats/store-stats').then((m) => m.StoreStats),
+            },
+            {
+                path: 'users',
+                loadComponent: () => import('./feature/dashboard/manage-users/manage-users').then((m) => m.ManageUsers),
+            },
+            {
+                path: 'users/:id',
+                loadComponent: () => import('./feature/dashboard/manage-users/manage-users').then((m) => m.ManageUsers),
+            },
+            {
+                path: 'products',
+                loadComponent: () => import('./feature/dashboard/manage-products/manage-products').then((m) => m.ManageProductsComponent),
+            },
+            {
+                path: 'categories',
+                loadComponent: () => import('./feature/dashboard/manage-categories/manage-categories').then((m) => m.ManageCategoriesComponent),
+            },
+            {
+                path: 'orders',
+                loadComponent: () => import('./feature/dashboard/manage-orders/manage-orders').then((m) => m.ManageOrders),
+            },
+            {
+                path: 'reviews',
+                loadComponent: () => import('./feature/dashboard/manage-reviews/manage-reviews').then((m) => m.ManageReviews),
+            },
+        ]
     },
     // catch-all fallback
     {

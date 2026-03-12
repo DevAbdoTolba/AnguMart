@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../../../layout/navbar/navbar';
-
+import { RouterLink } from '@angular/router';
 import { CartItem } from '../../../core/models/cart.model';
 import { Product } from '../../../core/models/product.model';
 import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-cart-view',
-  imports: [CommonModule, Navbar],
+  imports: [CommonModule, Navbar, RouterLink],
   templateUrl: './cart-view.html',
   styles: []
 })
