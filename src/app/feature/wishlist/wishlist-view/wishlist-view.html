@@ -1,13 +1,4 @@
-<app-navbar>
-  <a routerLink="/wishlist" class="d-flex align-items-center gap-2 text-decoration-none text-success fw-semibold">
-    <i class="bi bi-heart-fill"></i>
-    <span>Wishlist</span>
-  </a>
-  <a routerLink="/cart" class="d-flex align-items-center gap-2 text-decoration-none text-secondary fw-semibold">
-    <i class="bi bi-cart3"></i>
-    <span>Cart</span>
-  </a>
-</app-navbar>
+<app-navbar></app-navbar>
 
 <div class="app-wrapper py-5">
   <div class="container">
@@ -33,10 +24,10 @@
           </div>
         }
       </div>
-    } 
+    }
 
     @if (!isLoading && !errorMessage) {
-      
+
       <!-- Empty State -->
       @if (wishlistItems.length === 0) {
         <div class="text-center py-5 my-5">
@@ -50,17 +41,17 @@
           </button>
         </div>
       }
-      
+
       <!-- Loaded Items State -->
       @if (wishlistItems.length > 0) {
         <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
           @for (item of wishlistItems; track item._id) {
             <div class="col">
               <div class="card h-100 wishlist-card rounded-4 p-3 position-relative d-flex flex-column h-100 shadow-sm border">
-                
+
                 <!-- Remove Button overlaying Image -->
-                <button 
-                  class="btn btn-dark rounded-circle position-absolute" 
+                <button
+                  class="btn btn-dark rounded-circle position-absolute"
                   style="top: 20px; right: 20px; width: 36px; height: 36px; padding: 0; z-index: 10;"
                   (click)="removeFromWishlist(item._id)"
                   [disabled]="loadingProductIds.has(item._id)"
@@ -68,11 +59,11 @@
                   <i class="bi bi-x-lg small text-secondary"></i>
                 </button>
 
-                <img 
-                  [src]="'https://picsum.photos/seed/' + item._id + '/300/300'" 
+                <img
+                  [src]="item.image ? item.image : ('https://picsum.photos/seed/' + item._id + '/300/300')"
                   [alt]="item.name"
-                  class="card-img-top rounded-3 object-fit-cover mb-3" 
-                  height="180" 
+                  class="card-img-top rounded-3 object-fit-cover mb-3"
+                  height="180"
                 />
 
                 <div class="card-body p-0 d-flex flex-column flex-grow-1">
@@ -83,10 +74,10 @@
                       </a>
                     </h5>
                   </div>
-                  
+
                   <p class="fs-6 fw-bold text-success mb-3 mt-auto">{{ item.price | currency }}</p>
 
-                  <button 
+                  <button
                     class="btn btn-success rounded-pill fw-semibold border-0 w-100 position-relative z-2"
                     (click)="moveToCart(item)"
                     [disabled]="loadingProductIds.has(item._id)"

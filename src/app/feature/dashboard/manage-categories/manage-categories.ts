@@ -2,11 +2,12 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService, Category } from '../../../core/services/category.service';
+import { Navbar } from '../../../layout/navbar/navbar';
 
 @Component({
   selector: 'app-manage-categories',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Navbar],
   templateUrl: './manage-categories.html',
   styleUrls: ['./manage-categories.css']
 })
@@ -17,7 +18,7 @@ export class ManageCategoriesComponent implements OnInit {
   newCategoryName: string = '';
   editMode: boolean = false;
   selectedCategory: Category = { name: '' };
-  categoryIdToDelete: string = ''; 
+  categoryIdToDelete: string = '';
 
   message: string | null = null;
   isError: boolean = false;
@@ -33,10 +34,10 @@ export class ManageCategoriesComponent implements OnInit {
 
         if (res && res.data && Array.isArray(res.data)) {
           this.categories = res.data;
-        } 
+        }
         else if (Array.isArray(res)) {
           this.categories = res;
-        } 
+        }
         else {
           this.categories = [];
           console.warn('Warning: Response is not an array, check your API structure.');
@@ -92,7 +93,7 @@ export class ManageCategoriesComponent implements OnInit {
       next: () => {
         this.loadCategories();
         this.showMsg("Category deleted successfully");
-        this.categoryIdToDelete = ''; 
+        this.categoryIdToDelete = '';
       },
       error: (err) => {
         this.showMsg("Delete failed. Category may be linked to products.", true);

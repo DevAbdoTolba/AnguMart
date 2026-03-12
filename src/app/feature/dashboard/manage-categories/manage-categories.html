@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <div class="container-fluid py-4 manage-categories-page">
   <h2 class="text-white fw-bold mb-4">Manage Categories</h2>
 
@@ -28,9 +29,9 @@
           <td class="text-secondary">{{ cat.productCount || 0 }} products</td>
           <td class="text-center">
             <button class="btn btn-sm btn-danger me-2 rounded-pill px-3" (click)="onEdit(cat)">Edit</button>
-            <button class="btn btn-sm btn-danger rounded-pill px-3" 
-                    data-bs-toggle="modal" 
-                    data-bs-target="#deleteModal" 
+            <button class="btn btn-sm btn-danger rounded-pill px-3"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteModal"
                     (click)="onDelete(cat._id!)">
               Delete
             </button>

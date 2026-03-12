@@ -2,6 +2,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Navbar } from '../../../layout/navbar/navbar';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject, catchError, finalize, forkJoin, map, of, startWith, switchMap, tap } from 'rxjs';
 
@@ -39,7 +40,7 @@ interface OrderDetailResponse {
 
 @Component({
   selector: 'app-order-history',
-  imports: [CurrencyPipe, DatePipe, RouterLink],
+  imports: [CurrencyPipe, DatePipe, RouterLink, Navbar],
   templateUrl: './order-history.html',
   styleUrl: './order-history.css',
 })

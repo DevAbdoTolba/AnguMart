@@ -76,6 +76,12 @@ export class ProductDetail implements OnInit {
     this.productService.getProductById(id).subscribe({
       next: (response: any) => {
         this.product = response.data.data;
+        // some API responses send category as an array; use the first entry so
+        // breadcrumb/template logic stays simple. the model allows either type.
+        if (this.product && Array.isArray(this.product.category)) {
+          this.product.category = this.product.category[0] || '';
+        }
+
         // Check initial wishlist presence upon load
         this.wishlistService.wishlistIds$.subscribe(ids => {
            if(this.product) this.isInWishlist = ids.has(this.product._id);
@@ -119,12 +125,12 @@ export class ProductDetail implements OnInit {
     this.wishlistMessage = '';
 
     const willBeAdded = !this.isInWishlist;
-    
+
     // 1. Optimistically switch the UI INSTANTLY
     this.wishlistService.setOptimisticState(this.product._id, willBeAdded);
 
     // 2. Perform the matching backend operation
-    const request = willBeAdded 
+    const request = willBeAdded
       ? this.wishlistService.addToWishlist(this.product._id)
       : this.wishlistService.removeFromWishlist(this.product._id);
 
@@ -139,7 +145,7 @@ export class ProductDetail implements OnInit {
         console.error('Failed to update wishlist:', err);
         this.wishlistMessage = err.error?.message || 'Could not update wishlist. Reverting change...';
         this.wishlistMessageType = 'error';
-        
+
         // Revert optimistically back to the original state
         this.wishlistService.setOptimisticState(this.product!._id, !willBeAdded);
         this.isWishlistLoading = false;

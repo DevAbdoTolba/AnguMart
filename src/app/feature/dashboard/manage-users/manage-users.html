@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <div class="container-fluid min-vh-100 p-3 p-md-5 bg-black text-white">
   <div class="row align-items-center mb-5 g-3">
     <div class="col-12 col-lg-7">
@@ -7,14 +8,14 @@
         <span class="fw-bold text-light">{{ totalUsers() | number }}</span> total accounts in database
       </p>
     </div>
-    
+
     <div class="col-12 col-lg-5">
       <div class="input-group input-group-lg shadow-sm">
         <span class="input-group-text bg-dark border-secondary border-opacity-25 text-secondary px-3">
           <i class="bi bi-search"></i>
         </span>
-        <input type="text" (input)="updateSearch($event)" 
-               class="form-control bg-dark border-secondary border-opacity-25 text-white shadow-none fs-6" 
+        <input type="text" (input)="updateSearch($event)"
+               class="form-control bg-dark border-secondary border-opacity-25 text-white shadow-none fs-6"
                placeholder="Search name or email..."
                style="border-left: none;">
       </div>
@@ -38,7 +39,7 @@
             <tr class="border-bottom border-secondary border-opacity-10">
               <td class="ps-4 py-3">
                 <div class="d-flex align-items-center">
-                  <div class="d-flex align-items-center justify-content-center bg-primary bg-gradient rounded-3 fw-bold text-white shadow-sm me-3" 
+                  <div class="d-flex align-items-center justify-content-center bg-primary bg-gradient rounded-3 fw-bold text-white shadow-sm me-3"
                        style="width: 45px; height: 45px; font-size: 0.9rem;">
                     {{ user.name ? user.name.substring(0, 2).toUpperCase() : 'GU' }}
                   </div>
@@ -67,11 +68,11 @@
               </td>
               <td class="text-center pe-4">
                 <div class="d-flex justify-content-center gap-2">
-                  <button class="btn btn-outline-light btn-sm border-secondary border-opacity-50 px-3 py-2 rounded-3 shadow-sm hover-bg-light" 
+                  <button class="btn btn-outline-light btn-sm border-secondary border-opacity-50 px-3 py-2 rounded-3 shadow-sm hover-bg-light"
                           (click)="viewProfile(user._id)">
                     <i class="bi bi-eye"></i>
                   </button>
-                  <button [class]="user.isBlocked ? 'btn-outline-success' : 'btn-outline-danger'" 
+                  <button [class]="user.isBlocked ? 'btn-outline-success' : 'btn-outline-danger'"
                           class="btn btn-sm border-opacity-50 px-3 py-2 rounded-3 shadow-sm"
                           (click)="toggleBlock(user)">
                     <i [class]="user.isBlocked ? 'bi bi-unlock' : 'bi bi-slash-circle'"></i>

@@ -2,11 +2,12 @@ import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule, DecimalPipe, TitleCasePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { User } from '../../../core/services/user';
+import { Navbar } from '../../../layout/navbar/navbar';
 
 @Component({
   selector: 'app-manage-users',
   standalone: true,
-  imports: [CommonModule, DecimalPipe, TitleCasePipe],
+  imports: [CommonModule, DecimalPipe, TitleCasePipe, Navbar],
   templateUrl: './manage-users.html',
   styleUrl: './manage-users.css'
 })
@@ -78,7 +79,9 @@ export class ManageUsers implements OnInit {
 
   viewProfile(userId: any) {
     if (userId) {
-      this.router.navigate(['/dashboard/user-profile', userId]);
+      // we don't yet have a dedicated profile page yet; navigate back to the users list
+      // including the id as a param so the route exists and could be handled later
+      this.router.navigate(['/dashboard/users', userId]);
     }
   }
 
@@ -104,12 +107,12 @@ export class ManageUsers implements OnInit {
   }
 
   goToPage(page: number, event?: Event) {
-    if (event) event.preventDefault(); 
-    
-    if (page >= 1 && page <= this.maxPageToShow() && page !== this.currentPage()) { 
+    if (event) event.preventDefault();
+
+    if (page >= 1 && page <= this.maxPageToShow() && page !== this.currentPage()) {
       this.currentPage.set(page);
       this.updateEffectiveTotalPages();
-      this.loadUsers(page); 
+      this.loadUsers(page);
     }
   }
 

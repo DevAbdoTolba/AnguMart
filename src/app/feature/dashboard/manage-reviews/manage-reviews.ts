@@ -1,15 +1,16 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ReviewService } from '../../../core/services/review.service'; 
+import { ReviewService } from '../../../core/services/review.service';
+import { Navbar } from '../../../layout/navbar/navbar';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-manage-reviews',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, Navbar],
   templateUrl: './manage-reviews.html',
   styleUrls: ['./manage-reviews.css']
 })
@@ -18,7 +19,7 @@ export class ManageReviews implements OnInit {
 
   paginatedReviews: any[] = [];
   allFetchedReviews: any[] = [];
-  searchTerm: string = '';    
+  searchTerm: string = '';
   selectedReviewId: string | null = null;
   totalReviews: number = 0;
 
@@ -38,12 +39,12 @@ export class ManageReviews implements OnInit {
           this.paginatedReviews = res.data.data;
           this.totalPages = res.data.pages || Math.ceil((res.results || res.data.data.length) / this.itemsPerPage) || 1;
           this.totalReviews = res.results || res.data.data.length;
-        } 
+        }
         // Backend didn't paginate or wrap it properly (returned everything)
         else if (res && Array.isArray(res.data)) {
           this.allFetchedReviews = res.data;
           this.applyFrontendFiltersAndPagination();
-        } 
+        }
         else {
           this.paginatedReviews = [];
           this.totalPages = 1;
@@ -62,8 +63,8 @@ export class ManageReviews implements OnInit {
     let filtered = this.allFetchedReviews;
 
     if (term) {
-      filtered = filtered.filter(review => 
-        review.user?.name?.toLowerCase().includes(term) || 
+      filtered = filtered.filter(review =>
+        review.user?.name?.toLowerCase().includes(term) ||
         review.product?.name?.toLowerCase().includes(term) ||
         review.review?.toLowerCase().includes(term) ||
         review.title?.toLowerCase().includes(term)
@@ -83,7 +84,7 @@ export class ManageReviews implements OnInit {
   }
 
   onSearch() {
-    this.currentPage = 1; 
+    this.currentPage = 1;
     if (this.allFetchedReviews.length > 0) {
       this.applyFrontendFiltersAndPagination();
     } else {
@@ -106,7 +107,7 @@ export class ManageReviews implements OnInit {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
       this.loadAllReviews();
-      window.scrollTo(0, 0); 
+      window.scrollTo(0, 0);
     }
   }
 
@@ -124,12 +125,12 @@ export class ManageReviews implements OnInit {
       this.reviewService.deleteReview(this.selectedReviewId).subscribe({
         next: () => {
           this.showToast('Review Soft Deleted successfully');
-          this.loadAllReviews(); 
-          
+          this.loadAllReviews();
+
           const modalElement = document.getElementById('deleteReviewModal');
           const modalInstance = bootstrap.Modal.getInstance(modalElement);
           if (modalInstance) modalInstance.hide();
-          
+
           this.selectedReviewId = null;
         },
         error: (err) => {
@@ -144,7 +145,7 @@ export class ManageReviews implements OnInit {
     this.reviewService.restoreReview(id).subscribe({
       next: () => {
         this.showToast('Review Restored successfully');
-        this.loadAllReviews(); 
+        this.loadAllReviews();
       },
       error: (err) => {
         console.error('Error restoring review:', err);
@@ -158,10 +159,10 @@ export class ManageReviews implements OnInit {
     if (toastEl) {
       const toastBody = toastEl.querySelector('.toast-body');
       if (toastBody) toastBody.textContent = message;
-      
+
       toastEl.classList.remove('bg-success', 'bg-danger', 'text-white');
       toastEl.classList.add(isError ? 'bg-danger' : 'bg-success', 'text-white');
-      
+
       const toast = new bootstrap.Toast(toastEl);
       toast.show();
     }

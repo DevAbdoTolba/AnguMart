@@ -1,6 +1,7 @@
+<app-navbar></app-navbar>
 <div class="container d-flex align-items-center justify-content-center min-vh-100 bg-dark">
   <div class="card bg-dark text-white border-secondary p-4 shadow" style="max-width: 400px; width: 100%;">
-    
+
     <h2 class="text-success fw-bold text-center mb-1">Welcome back</h2>
     <p class="text-secondary small text-center mb-4">Log in to continue shopping</p>
 
@@ -11,14 +12,14 @@
     }
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      
+
       <div class="mb-3">
         <label class="form-label small fw-bold">Email Address</label>
-        <input type="email" formControlName="email" 
+        <input type="email" formControlName="email"
                placeholder="e.g. name@example.com"
                class="form-control"
                [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
-        
+
         @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
           <div class="invalid-feedback small">Please enter a valid email address.</div>
         }
@@ -27,8 +28,8 @@
       <div class="mb-3">
         <label class="form-label small fw-bold">Password</label>
         <div class="input-group">
-          <input [type]="showPassword ? 'text' : 'password'" 
-                 formControlName="password" 
+          <input [type]="showPassword ? 'text' : 'password'"
+                 formControlName="password"
                  placeholder="Enter your password"
                  class="form-control"
                  [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
@@ -36,7 +37,7 @@
             <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
           </button>
         </div>
-        
+
         @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
           <div class="text-danger small mt-1" style="font-size: 0.8rem;">
             Password must be at least 8 characters long.
@@ -53,7 +54,7 @@
 
       <div class="text-center mt-4">
         <p class="text-secondary small">
-          Don't have an account? 
+          Don't have an account?
           <a routerLink="/signup" class="text-success fw-bold text-decoration-none">Sign up for free</a>
         </p>
       </div>

@@ -2,13 +2,14 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Navbar } from '../../../layout/navbar/navbar';
 import { finalize } from 'rxjs';
 import { UserService, User } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-profile-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink], 
+  imports: [CommonModule, FormsModule, RouterLink, Navbar],
   templateUrl: './profile-details.html'
 })
 export class ProfileDetailsComponent implements OnInit {
@@ -19,7 +20,7 @@ export class ProfileDetailsComponent implements OnInit {
   isLoading = signal<boolean>(true);            // Tracks initial data loading state
   isSaving = signal<boolean>(false);            // Tracks the profile update process state
   error = signal<string | null>(null);          // Stores error messages if any operation fails
-  
+
   // --- UI Control Signals ---
   showDeleteModal = signal<boolean>(false);     // Controls the visibility of the Bootstrap delete confirmation modal
   updateSuccess = signal<boolean>(false);       // Controls the visibility of the success alert after updating profile
@@ -51,9 +52,9 @@ export class ProfileDetailsComponent implements OnInit {
     if (!currentUser) return;
 
     this.isSaving.set(true);
-    this.userService.updateMe({ 
-      name: currentUser.name, 
-      phone: currentUser.phone 
+    this.userService.updateMe({
+      name: currentUser.name,
+      phone: currentUser.phone
     })
     .pipe(finalize(() => this.isSaving.set(false)))
     .subscribe({

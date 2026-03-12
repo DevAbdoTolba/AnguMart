@@ -1,6 +1,7 @@
+<app-navbar></app-navbar>
 <div class="container d-flex align-items-center justify-content-center min-vh-100 bg-dark text-white">
   <div class="card bg-dark border-secondary p-5 text-center shadow-lg" style="max-width: 500px; width: 100%; border-radius: 20px;">
-    
+
     @if (isLoading) {
       <div class="spinner-border text-success mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
       <h3 class="fw-bold">Checking your link...</h3>
@@ -13,7 +14,7 @@
           <i class="bi bi-envelope-check-fill text-success" style="font-size: 3.5rem;"></i>
         </div>
       </div>
-      
+
       <h1 class="fw-bold mb-3">Email Confirmed!</h1>
       <p class="text-secondary fs-5 mb-4">
         Your email has been verified successfully.<br>
@@ -23,7 +24,7 @@
       <button routerLink="/login" class="btn btn-success btn-lg w-100 rounded-pill fw-bold py-3 shadow">
         Go to Login
       </button>
-      
+
       <p class="mt-4 text-muted small">You'll be redirected to the login page automatically.</p>
     }
 
@@ -33,7 +34,7 @@
       </div>
       <h2 class="fw-bold text-danger mb-3">Verification Failed</h2>
       <p class="text-secondary mb-4">{{ errorMessage }}</p>
-      
+
       <div class="d-grid gap-2">
         <button routerLink="/signup" class="btn btn-outline-light rounded-pill fw-bold">Try Registering Again</button>
         <a routerLink="/login" class="text-success text-decoration-none mt-2">Back to Login</a>

@@ -35,10 +35,11 @@ interface CheckoutResponse {
 }
 
 import { RouterLink } from '@angular/router';
+import { Navbar } from '../../../layout/navbar/navbar';
 
 @Component({
   selector: 'app-checkout-flow',
-  imports: [CurrencyPipe, RouterLink],
+  imports: [CurrencyPipe, RouterLink, Navbar],
   templateUrl: './checkout-flow.html',
   styleUrl: './checkout-flow.css',
 })

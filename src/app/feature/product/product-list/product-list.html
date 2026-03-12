@@ -2,16 +2,7 @@
 <app-navbar
   [searchValue]="searchTerm"
   (searchChanged)="onSearchChanged($event)"
->
-  <a routerLink="/wishlist" class="d-flex align-items-center gap-2 text-decoration-none text-secondary fw-semibold">
-    <i class="bi bi-heart"></i>
-    <span>Wishlist</span>
-  </a>
-  <a routerLink="/cart" class="d-flex align-items-center gap-2 text-decoration-none text-secondary fw-semibold">
-    <i class="bi bi-cart3"></i>
-    <span>Cart</span>
-  </a>
-</app-navbar>
+></app-navbar>
 
 <div class="app-wrapper py-5">
   <div class="container">
@@ -62,7 +53,9 @@
         @for (product of filteredProducts; track product._id) {
           <div class="col">
             <a [routerLink]="['/products', product._id]" class="card h-100 text-decoration-none text-reset bg-dark shadow-sm product-card-hover border-0 rounded-4 overflow-hidden" style="--bs-bg-opacity: 0.5;">
-              <img class="card-img-top rounded-0" style="height: 220px; object-fit: cover;" [src]="'https://picsum.photos/seed/' + product._id + '/400/300'" [alt]="product.name">
+              <img class="card-img-top rounded-0" style="height: 220px; object-fit: cover;"
+              [src]="product.image ? product.image : ('https://picsum.photos/seed/' + product._id + '/400/300')"
+              [alt]="product.name">
               <div class="card-body d-flex flex-column p-4">
                 <h5 class="card-title fs-6 fw-semibold mb-2 text-truncate text-light" [title]="product.name">{{ product.name }}</h5>
                 <div class="text-warning mb-2 fs-6 d-flex align-items-center gap-1">
@@ -110,13 +103,13 @@
               <span aria-hidden="true">&lsaquo;</span>
             </button>
           </li>
-          
+
           @for (page of totalPagesArray; track $index) {
             <li class="page-item" [class.active]="currentPage === page">
               <button class="page-link shadow-none border-0 rounded-3 px-3 py-2 fw-bold" [style.background-color]="currentPage === page ? '#1DB954' : ''" [style.color]="currentPage === page ? '#121212' : '#b3b3b3'" [class.bg-dark]="currentPage !== page" style="--bs-bg-opacity: 0.5;" (click)="goToPage(page)">{{ page }}</button>
             </li>
           }
-          
+
           <li class="page-item" [class.disabled]="currentPage === totalPages">
             <button class="page-link shadow-none border-0 rounded-3 text-secondary bg-dark px-3 py-2 fw-bold" style="--bs-bg-opacity: 0.5;" (click)="nextPage()" aria-label="Next">
               <span aria-hidden="true">&rsaquo;</span>

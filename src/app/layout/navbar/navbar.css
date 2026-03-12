@@ -2,7 +2,9 @@
 .navbar-wrapper {
   background: #181818;
   border-bottom: 1px solid #333333;
-  height: 64px;
+  /* allow the wrapper to grow when contents wrap; keep min-height for desktop */
+  min-height: 64px;
+  height: auto;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -15,6 +17,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap; /* allow elements to flow onto a second line on smaller screens */
+  gap: 8px;
   height: 100%;
 }
 
@@ -34,6 +38,7 @@
   display: flex;
   align-items: center;
   gap: 24px;
+  flex-wrap: wrap; /* allow links to stack if there are many */
 }
 
 /* Search bar */

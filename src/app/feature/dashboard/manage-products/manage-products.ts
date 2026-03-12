@@ -5,11 +5,12 @@ import { ProductService, Product } from '../../../core/services/product.service'
 import { CategoryService, Category } from '../../../core/services/category.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Navbar } from '../../../layout/navbar/navbar';
 
 @Component({
   selector: 'app-manage-products',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, Navbar],
   templateUrl: './manage-products.html',
   styleUrls: ['./manage-products.css']
 })
@@ -22,8 +23,8 @@ export class ManageProductsComponent implements OnInit {
   products: Product[] = [];
   isEditMode = false;
   currentProductId: string | null = null;
-  errorMessage: string | null = null; 
-  
+  errorMessage: string | null = null;
+
   productIdToDelete: string | null = null;
 
   // Pagination
@@ -51,13 +52,13 @@ export class ManageProductsComponent implements OnInit {
       price: [0, [Validators.required, Validators.min(1)]],
       stock: [0, [Validators.required, Validators.min(0)]],
       description: [''],
-      image: ['', Validators.required] 
+      image: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
     this.loadProducts();
-    
+
     // Set up search debouncing
     this.searchSubject.pipe(
       debounceTime(300),
@@ -88,7 +89,7 @@ export class ManageProductsComponent implements OnInit {
 
   fetchCategoriesFromApi(term: string): void {
     const params: any = { limit: 5, page: 1 };
-    
+
     if (term.trim()) {
       params['name'] = term.trim();
     }
@@ -107,7 +108,7 @@ export class ManageProductsComponent implements OnInit {
            const firstArrayKey = keys.find(key => Array.isArray(cats[key]));
            if (firstArrayKey) extractedCats = cats[firstArrayKey];
         }
-        
+
         extractedCats.forEach(c => {
           if (c._id) {
             this.categoryCache.set(c._id, c.name);
@@ -183,13 +184,13 @@ export class ManageProductsComponent implements OnInit {
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      if (file.size > 1024 * 1024) { 
+      if (file.size > 1024 * 1024) {
         this.errorMessage = "The image is too large (Max: 1MB). Please compress it or choose another.";
         this.productForm.get('image')?.setErrors({ 'fileTooLarge': true });
         return;
       }
 
-      this.errorMessage = null; 
+      this.errorMessage = null;
       const reader = new FileReader();
       reader.onload = () => {
         this.productForm.patchValue({
@@ -210,10 +211,10 @@ export class ManageProductsComponent implements OnInit {
     }
 
     const productData = this.productForm.value;
-    
+
     // If user's multi select provided an array but backend prefers first match or array.
     // For safety, we keep sending whatever the form produces (Array of IDs).
-    
+
     if (this.isEditMode && this.currentProductId) {
       this.productService.updateProduct(this.currentProductId, productData).subscribe({
         next: () => {
@@ -245,7 +246,7 @@ export class ManageProductsComponent implements OnInit {
     this.isEditMode = true;
     this.currentProductId = product._id || null;
     this.errorMessage = null;
-    
+
     // Normalize Category mappings to Array of IDs and populate cache
     let categoryIds: string[] = [];
     if (Array.isArray(product.category)) {
@@ -268,7 +269,7 @@ export class ManageProductsComponent implements OnInit {
         categoryIds = [typeof product.category === 'string' ? product.category : String(product.category)];
       }
     }
-    
+
     this.productForm.patchValue({
       name: product.name,
       category: categoryIds,
@@ -290,7 +291,7 @@ export class ManageProductsComponent implements OnInit {
       this.productService.deleteProduct(this.productIdToDelete).subscribe({
         next: () => {
           this.loadProducts();
-          this.productIdToDelete = null; 
+          this.productIdToDelete = null;
         },
         error: (err: any) => {
           this.errorMessage = "Delete failed. You might not have permission.";

@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { Navbar } from '../../../layout/navbar/navbar';
 
 declare var bootstrap: any;
 
 interface Order {
   _id: string;
-  user: { name?: string; username?: string }; 
+  user: { name?: string; username?: string };
   items: any[];
   totalPrice: number;
   status: 'Pending' | 'Shipped' | 'Delivered' | 'Cancelled';
@@ -17,19 +18,19 @@ interface Order {
 @Component({
   selector: 'app-manage-orders',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, Navbar],
   templateUrl: './manage-orders.html',
   styleUrls: ['./manage-orders.css']
 })
 export class ManageOrders implements OnInit {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/orders'; 
+  private apiUrl = 'http://localhost:3000/api/orders';
 
   filteredOrders: Order[] = [];
   currentFilter: string = 'All';
   currentPage: number = 1;
   totalPages: number = 1;
-  
+
   selectedOrderId: string | null = null;
   selectedOrderItems: any[] = [];
   selectedOrderTotal: number = 0;
@@ -43,10 +44,10 @@ export class ManageOrders implements OnInit {
     if (toastEl) {
       const toastBody = toastEl.querySelector('.toast-body');
       if (toastBody) toastBody.textContent = message;
-      
+
       toastEl.classList.remove('bg-success', 'bg-danger');
       toastEl.classList.add(isError ? 'bg-danger' : 'bg-success');
-      
+
       const toast = new bootstrap.Toast(toastEl);
       toast.show();
     }
@@ -83,7 +84,7 @@ export class ManageOrders implements OnInit {
     this.http.patch(`${this.apiUrl}/${order._id}/status`, { status: order.status }).subscribe({
       next: () => {
         this.showNotification(`Order #${order._id.slice(-5)} status updated!`);
-        this.loadOrders(); 
+        this.loadOrders();
       },
       error: (err) => {
         this.showNotification(err.error?.message || 'Update failed', true);
@@ -134,7 +135,7 @@ export class ManageOrders implements OnInit {
 
   openItemsModal(order: Order) {
     this.selectedOrderTotal = order.totalPrice || 0;
-    
+
     // Initialize items with loading state for products not populated
     this.selectedOrderItems = (order.items || []).map(i => {
       const isPopulated = typeof i.product === 'object' && i.product !== null;

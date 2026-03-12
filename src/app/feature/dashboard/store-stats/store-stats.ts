@@ -2,22 +2,23 @@ import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DashboardService } from '../../../core/services/dashboard.service';
+import { Navbar } from '../../../layout/navbar/navbar';
 
 @Component({
   selector: 'app-store-stats',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, RouterModule],
+  imports: [CommonModule, CurrencyPipe, RouterModule, Navbar],
   templateUrl: './store-stats.html',
   styleUrl: './store-stats.css'
 })
 export class StoreStats implements OnInit {
-  private dashboardService = inject(DashboardService); 
+  private dashboardService = inject(DashboardService);
 
   adminName = signal('Admin');
   totalUsers = signal<number>(0);
   totalRevenue = signal<number>(0);
   totalOrders = signal<number>(0);
-  
+
   quickActions = signal<any[]>([]);
   recentOrders = signal<any[]>([]);
 
@@ -67,7 +68,7 @@ export class StoreStats implements OnInit {
       next: (res: any) => {
         // Essential Change: Accessing res.data.data based on your API structure
         const ordersArray = res.data?.data || res.data || [];
-        
+
         if (Array.isArray(ordersArray)) {
           const mappedOrders = ordersArray
             .slice(0, 5)
@@ -78,7 +79,7 @@ export class StoreStats implements OnInit {
               status: order.status || 'Pending',
               date: order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'
             }));
-          
+
           this.recentOrders.set(mappedOrders);
         }
       },

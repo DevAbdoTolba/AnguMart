@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Navbar } from '../../../layout/navbar/navbar';
 
 import { CartItem } from '../../../core/models/cart.model';
 import { Product } from '../../../core/models/product.model';
@@ -7,7 +8,7 @@ import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-cart-view',
-  imports: [CommonModule],
+  imports: [CommonModule, Navbar],
   templateUrl: './cart-view.html',
   styles: []
 })
@@ -63,6 +64,11 @@ export class CartView implements OnInit {
   }
 
   getProductImage(item: CartItem): string {
+    // prefer image url from product object if available
+    const prod = this.getProduct(item);
+    if (prod && prod.image) {
+      return prod.image;
+    }
     const id = this.getProductId(item);
     return `https://picsum.photos/seed/${id}/400/300`;
   }
